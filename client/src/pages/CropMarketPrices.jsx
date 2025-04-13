@@ -2,23 +2,6 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'animate.css';
 
-const mockPrices = {
-  'Tamil Nadu - Erode': [
-    { crop: 'Tomato', price: '₹22/kg' },
-    { crop: 'Onion', price: '₹18/kg' },
-    { crop: 'Brinjal', price: '₹30/kg' },
-  ],
-  'Punjab - Amritsar': [
-    { crop: 'Wheat', price: '₹23/kg' },
-    { crop: 'Rice', price: '₹26/kg' },
-    { crop: 'Maize', price: '₹20/kg' },
-  ],
-  'Maharashtra - Pune': [
-    { crop: 'Sugarcane', price: '₹34/kg' },
-    { crop: 'Cotton', price: '₹57/kg' },
-  ],
-};
-
 const states = {
   'Tamil Nadu': ['Erode', 'Chennai', 'Madurai'],
   Punjab: ['Amritsar', 'Ludhiana'],
@@ -29,10 +12,32 @@ const CropMarketPrices = () => {
   const [selectedState, setSelectedState] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [prices, setPrices] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleFetch = () => {
-    const key = `${selectedState} - ${selectedDistrict}`;
-    setPrices(mockPrices[key] || []);
+  // Fetch market prices from backend
+  const handleFetch = async () => {
+    if (!selectedState || !selectedDistrict) return;
+
+    setLoading(true);
+    setError(null);
+
+    const apiUrl = `http://localhost:5000/request?commodity=all&state=${selectedState}&market=${selectedDistrict}`;
+
+    try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+
+      const data = await response.json();
+      setPrices(data);  // Set the fetched prices
+
+    } catch (err) {
+      setError('Error fetching market prices. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -87,7 +92,21 @@ const CropMarketPrices = () => {
           </button>
         </div>
 
-        {prices.length > 0 && (
+        {loading && (
+          <div className="mt-4 text-center">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        )}
+
+        {error && (
+          <div className="mt-4 alert alert-danger text-center">
+            {error}
+          </div>
+        )}
+
+        {prices.length > 0 && !loading && (
           <div className="mt-4">
             <h5 className="text-center text-success mb-3">
               📍 Market Prices for {selectedDistrict}, {selectedState}
@@ -103,8 +122,8 @@ const CropMarketPrices = () => {
                 <tbody>
                   {prices.map((item, idx) => (
                     <tr key={idx}>
-                      <td>{item.crop}</td>
-                      <td>{item.price}</td>
+                      <td>{item.Commodity}</td>
+                      <td>{item['Model Prize']}</td>
                     </tr>
                   ))}
                 </tbody>

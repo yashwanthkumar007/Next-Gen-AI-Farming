@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const mongoose = require('mongoose');
+const cron = require('node-cron');
+const fetchMarketPrices = require('./jobs/fetchMarketPrices');
+
 
 const app = express();
 
@@ -23,6 +26,13 @@ app.use('/recommend', recommendationRoutes);
 
 const cropRoutes = require('./routes/cropRoutes');
 app.use('/api/crops', cropRoutes);
+
+
+// Market Prices
+cron.schedule('0 6 * * *', () => {
+  console.log('⏰ Running scheduled market price fetch...');
+  fetchMarketPrices();
+});
 
 // Start the server
 const PORT = process.env.PORT || 5000;
