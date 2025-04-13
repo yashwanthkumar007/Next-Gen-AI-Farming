@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import LocationSelector from './LocationSelector';
+import { useLocation } from 'react-router-dom'; // ✅ import this
 
 const initialFormState = { crop: '', location: '' };
 
@@ -8,12 +9,14 @@ const RecommendForm = () => {
   const [formData, setFormData] = useState(initialFormState);
   const [result, setResult] = useState(null);
   const [resetKey, setResetKey] = useState(Date.now());
+  const location = useLocation(); // ✅ detects path change
 
   useEffect(() => {
-    // Reset form on page load or remount
+    // ✅ Reset form whenever route is loaded (fresh or revisited)
     setFormData(initialFormState);
-    setResetKey(Date.now()); // Force re-render of LocationSelector
-  }, []);
+    setResult(null);
+    setResetKey(Date.now()); // force remount LocationSelector
+  }, [location.pathname]); // runs on route path change
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
