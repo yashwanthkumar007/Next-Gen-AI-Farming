@@ -1,12 +1,13 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './pages/Login';
-import RecommendForm from './pages/RecommendForm';
-import DashboardFarmer from './pages/DashboardFarmer';
-import DashboardAdmin from './pages/DashboardAdmin';
-import DashboardBuyer from './pages/DashboardBuyer';
-import CropMarket from './pages/CropMarket';
-import CropListingForm from './pages/CropListingForm';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import RecommendForm from "./pages/RecommendForm";
+import DashboardFarmer from "./pages/DashboardFarmer";
+import DashboardAdmin from "./pages/DashboardAdmin";
+import DashboardBuyer from "./pages/DashboardBuyer";
+import CropMarket from "./pages/CropMarket";
+import CropListingForm from "./pages/CropListingForm";
+import CropMarketPrices from "./pages/CropMarketPrices";
 function App() {
   return (
     <Router>
@@ -18,7 +19,7 @@ function App() {
         <Route path="/buyer-dashboard" element={<DashboardBuyer />} />
         <Route path="/market" element={<CropMarket />} />
         <Route path="/list-crop" element={<CropListingForm />} />
-      
+        <Route path="/market-prices" element={<CropMarketPrices />} />
       </Routes>
     </Router>
   );
