@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import LocationSelector from './LocationSelector';
 
+const initialFormState = { crop: '', location: '' };
 
 const RecommendForm = () => {
-  const [formData, setFormData] = useState({ crop: '', location: '' });
+  const [formData, setFormData] = useState(initialFormState);
   const [result, setResult] = useState(null);
+  const [resetKey, setResetKey] = useState(Date.now());
+
+  useEffect(() => {
+    // Reset form on page load or remount
+    setFormData(initialFormState);
+    setResetKey(Date.now()); // Force re-render of LocationSelector
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -37,14 +45,21 @@ const RecommendForm = () => {
             required
           />
         </div>
+
         <div className="mb-3">
-        <label className="form-label">Location</label>
-        <LocationSelector onLocationSelect={(loc) => setFormData((prev) => ({ ...prev, location: loc }))} />
-        {formData.location && (<div className="form-text text-success mt-1">
-      ✅ Selected Location: <strong>{formData.location}</strong>
-    </div>
-  )}
-</div>
+          <label className="form-label">Location</label>
+          <LocationSelector
+            key={resetKey}
+            onLocationSelect={(loc) =>
+              setFormData((prev) => ({ ...prev, location: loc }))
+            }
+          />
+          {formData.location && (
+            <div className="form-text text-success mt-1">
+              ✅ Selected Location: <strong>{formData.location}</strong>
+            </div>
+          )}
+        </div>
 
         <button className="btn btn-success">Submit</button>
       </form>
