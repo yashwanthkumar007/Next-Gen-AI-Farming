@@ -1,6 +1,6 @@
 # model_utils.py
 
-def analyze_crop(data):
+def get_recommendation(data):
     crop = data.get("crop")
     location = data.get("location")
 
