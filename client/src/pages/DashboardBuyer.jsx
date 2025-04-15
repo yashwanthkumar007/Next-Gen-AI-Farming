@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'animate.css';
-
+import NavbarWithLogout from '../components/NavbarWithLogout';
 const DashboardBuyer = () => {
   const [crops, setCrops] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,6 +43,8 @@ const DashboardBuyer = () => {
   return (
     <div className="bg-light min-vh-100 px-3 py-5 animate__animated animate__fadeIn">
       <div className="container">
+      <NavbarWithLogout />
+
         <h3 className="text-warning text-center mb-4">🛒 Buyer Dashboard</h3>
 
         {loading ? (

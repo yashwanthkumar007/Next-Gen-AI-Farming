@@ -1,30 +1,44 @@
- 
-// server.js
-
 const express = require('express');
 const cors = require('cors');
+require('dotenv').config();
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
+const cron = require('node-cron');
+const fetchMarketPrices = require('./jobs/fetchMarketPrices');
 
-// Load environment variables from .env file
-dotenv.config();
+const app = express(); // Moved up here
 
-// Initialize express app
-const app = express();
-
-// Middleware
+// Middleware setup
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connected"))
-  .catch(err => console.log(err));
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('✅ MongoDB connected'))
+.catch((err) => console.error('❌ MongoDB connection error:', err));
 
-// Basic route
-app.get('/', (req, res) => res.send('API is working!'));
+// Auth Routes
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
+
+// Recommendation Routes
+const recommendationRoutes = require('./routes/recommendation');
+app.use('/recommend', recommendationRoutes);
+
+// Crop Routes
+const cropRoutes = require('./routes/cropRoutes');
+app.use('/api/crops', cropRoutes);
+
+// Market Prices Fetch (Agmarknet)
+cron.schedule('0 6 * * *', () => {
+  console.log('⏰ Running scheduled market price fetch...');
+  fetchMarketPrices();
+});
 
 // Start the server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`🚀 Express server running at http://localhost:${PORT}`);
+});

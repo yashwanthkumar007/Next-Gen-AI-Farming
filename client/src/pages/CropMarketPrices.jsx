@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'animate.css';
+import NavbarWithLogout from '../components/NavbarWithLogout';
 
 const states = {
   'Tamil Nadu': ['Erode', 'Chennai', 'Madurai'],
@@ -47,6 +48,8 @@ const CropMarketPrices = () => {
   return (
     <div className="bg-light min-vh-100 px-3 py-5 animate__animated animate__fadeIn">
       <div className="container">
+      <NavbarWithLogout />
+
         <h3 className="text-center text-primary mb-4">📈 Market Price Recommendation</h3>
 
         <div className="card p-4 shadow-sm mx-auto" style={{ maxWidth: 600 }}>

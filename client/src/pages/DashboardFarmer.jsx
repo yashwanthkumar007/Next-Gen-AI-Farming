@@ -1,9 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import NavbarWithLogout from '../components/NavbarWithLogout';
 
 const DashboardFarmer = () => {
   const navigate = useNavigate();
+
+  
 
   const handleRecommendation = () => {
     navigate('/recommend');
@@ -12,6 +15,8 @@ const DashboardFarmer = () => {
   return (
     <div style={{ backgroundColor: '#f0f9f1', minHeight: '100vh' }}>
       <div className="container py-5">
+      <NavbarWithLogout />
+
         <div className="text-center mb-4">
           <h2 className="text-success">👨‍🌾 Farmer Dashboard</h2>
           <p>Welcome to your smart farming assistant</p>
