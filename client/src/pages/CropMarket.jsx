@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'animate.css';
 import axios from 'axios';
+import NavbarWithLogout from '../components/NavbarWithLogout';
+
 
 const CropMarket = () => {
   const [role, setRole] = useState('buyer'); // Change to 'farmer' or 'admin' for testing
@@ -25,6 +27,8 @@ const CropMarket = () => {
   return (
     <div className="bg-light min-vh-100 px-3 py-5 animate__animated animate__fadeIn">
       <div className="container">
+      <NavbarWithLogout />
+
         <h3 className="mb-4 text-center text-primary">🌾 Crop Market</h3>
 
         {loading ? (

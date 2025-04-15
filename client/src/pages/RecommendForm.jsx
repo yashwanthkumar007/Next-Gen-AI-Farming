@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import LocationSelector from './LocationSelector';
 import { useLocation } from 'react-router-dom'; // ✅ import this
+import NavbarWithLogout from '../components/NavbarWithLogout';
 
 const initialFormState = { crop: '', location: '' };
 
@@ -35,6 +36,7 @@ const RecommendForm = () => {
 
   return (
     <div className="container mt-5">
+      <NavbarWithLogout/>
       <h3>🌿 Get Crop Recommendation</h3>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">

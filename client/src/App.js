@@ -8,11 +8,14 @@ import DashboardBuyer from "./pages/DashboardBuyer";
 import CropMarket from "./pages/CropMarket";
 import CropListingForm from "./pages/CropListingForm";
 import CropMarketPrices from "./pages/CropMarketPrices";
+import Register from './pages/Register';
+
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/recommend" element={<RecommendForm />} />
         <Route path="/farmer-dashboard" element={<DashboardFarmer />} />
         <Route path="/admin-dashboard" element={<DashboardAdmin />} />
