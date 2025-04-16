@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import LocationSelector from './LocationSelector';
-import { useLocation } from 'react-router-dom'; // ✅ import this
-import NavbarWithLogout from '../components/NavbarWithLogout';
+import { useLocation } from 'react-router-dom';
 
 const initialFormState = { crop: '', location: '' };
 
@@ -10,14 +9,14 @@ const RecommendForm = () => {
   const [formData, setFormData] = useState(initialFormState);
   const [result, setResult] = useState(null);
   const [resetKey, setResetKey] = useState(Date.now());
-  const location = useLocation(); // ✅ detects path change
+  const location = useLocation();
 
+  // Reset form data and location on page refresh or route change
   useEffect(() => {
-    // ✅ Reset form whenever route is loaded (fresh or revisited)
     setFormData(initialFormState);
     setResult(null);
-    setResetKey(Date.now()); // force remount LocationSelector
-  }, [location.pathname]); // runs on route path change
+    setResetKey(Date.now());
+  }, [location.pathname]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -26,8 +25,8 @@ const RecommendForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/recommend', formData);
-      setResult(res.data.data);
+      const res = await axios.post('http://localhost:5000/api/fertilizer', formData);
+      setResult(res.data);
     } catch (err) {
       console.error(err);
       setResult({ error: 'Something went wrong.' });
@@ -36,11 +35,10 @@ const RecommendForm = () => {
 
   return (
     <div className="container mt-5">
-      <NavbarWithLogout/>
-      <h3>🌿 Get Crop Recommendation</h3>
+      <h3 className="mb-4">🧪 Fertilizer Recommendation</h3>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label>Crop</label>
+          <label>Crop Name</label>
           <input
             type="text"
             name="crop"
@@ -59,6 +57,7 @@ const RecommendForm = () => {
               setFormData((prev) => ({ ...prev, location: loc }))
             }
           />
+          {/* Conditionally render tick mark */}
           {formData.location && (
             <div className="form-text text-success mt-1">
               ✅ Selected Location: <strong>{formData.location}</strong>
@@ -66,21 +65,27 @@ const RecommendForm = () => {
           )}
         </div>
 
-        <button className="btn btn-success">Submit</button>
+        <button className="btn btn-primary">Get Recommendation</button>
       </form>
 
       {result && (
         <div className="mt-4">
-          <h5>Recommendation:</h5>
+          <h5 className="text-success">Recommended Fertilizer Plan:</h5>
           {result.error ? (
             <p className="text-danger">{result.error}</p>
           ) : (
             <ul>
-              <li>Crop: {result.crop}</li>
-              <li>Location: {result.location}</li>
-              <li>Fertilizer: {result.fertilizer}</li>
-              <li>Pesticide: {result.pesticide}</li>
-              <li>Note: {result.note}</li>
+              <li><strong>Crop:</strong> {result.crop}</li>
+              <li><strong>Location:</strong> {result.location}</li>
+              <li><strong>Fertilizer:</strong> {result.fertilizer}</li>
+              <li><strong>Dosage:</strong> {result.dosage}</li>
+              <li><strong>Note:</strong> {result.note}</li>
+              <li>
+                📘 External Source:{' '}
+                <a href={result.source} target="_blank" rel="noreferrer">
+                  View Fertilizer Details
+                </a>
+              </li>
             </ul>
           )}
         </div>
