@@ -9,13 +9,14 @@ const RecommendForm = () => {
   const [formData, setFormData] = useState(initialFormState);
   const [result, setResult] = useState(null);
   const [resetKey, setResetKey] = useState(Date.now());
+  const [locationSelected, setLocationSelected] = useState(false); // State to control location display
   const location = useLocation();
 
-  // Reset form data and location on page refresh or route change
   useEffect(() => {
     setFormData(initialFormState);
     setResult(null);
-    setResetKey(Date.now());
+    setLocationSelected(false); // Reset the location display on page refresh
+    setResetKey(Date.now()); // Trigger re-render of LocationSelector component
   }, [location.pathname]);
 
   const handleChange = (e) => {
@@ -25,8 +26,12 @@ const RecommendForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/fertilizer', formData);
-      setResult(res.data);
+      const res = await axios.post('http://localhost:5000/api/recommend/api/fertilizer', formData);
+      if (res.data.status === 'success') {
+        setResult(res.data.data);
+      } else {
+        setResult(res.data);
+      }
     } catch (err) {
       console.error(err);
       setResult({ error: 'Something went wrong.' });
@@ -34,23 +39,18 @@ const RecommendForm = () => {
   };
 
   return (
-    
-    <div className="container mt-5">
-<<<<<<< HEAD
+    <div className="container">
       <h3 className="mb-4">🧪 Fertilizer Recommendation</h3>
-=======
-      
-      <h3>🌿 Get Crop Recommendation</h3>
->>>>>>> 093ee6312fc0acb31bed6d78ca2cb78b460427b2
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="shadow p-4 rounded bg-light">
         <div className="mb-3">
-          <label>Crop Name</label>
+          <label className="form-label">Crop Name</label>
           <input
             type="text"
             name="crop"
             value={formData.crop}
             onChange={handleChange}
             className="form-control"
+            placeholder="Enter crop name (e.g., Rice, Wheat)"
             required
           />
         </div>
@@ -59,34 +59,34 @@ const RecommendForm = () => {
           <label className="form-label">Location</label>
           <LocationSelector
             key={resetKey}
-            onLocationSelect={(loc) =>
-              setFormData((prev) => ({ ...prev, location: loc }))
-            }
+            onLocationSelect={(loc) => {
+              setFormData((prev) => ({ ...prev, location: loc }));
+              setLocationSelected(true); // Mark location as selected
+            }}
           />
-          {/* Conditionally render tick mark */}
-          {formData.location && (
+          {locationSelected && formData.location && (
             <div className="form-text text-success mt-1">
-              ✅ Selected Location: <strong>{formData.location}</strong>
+              <strong>Selected Location:</strong> <strong>{formData.location}</strong>
             </div>
           )}
         </div>
 
-        <button className="btn btn-primary">Get Recommendation</button>
+        <button className="btn btn-success w-100">Get Recommendation</button>
       </form>
 
       {result && (
-        <div className="mt-4">
-          <h5 className="text-success">Recommended Fertilizer Plan:</h5>
+        <div className="mt-4 p-3 border rounded bg-white">
+          <h5 className="text-success mb-3">Recommended Fertilizer Plan:</h5>
           {result.error ? (
             <p className="text-danger">{result.error}</p>
           ) : (
-            <ul>
-              <li><strong>Crop:</strong> {result.crop}</li>
-              <li><strong>Location:</strong> {result.location}</li>
-              <li><strong>Fertilizer:</strong> {result.fertilizer}</li>
-              <li><strong>Dosage:</strong> {result.dosage}</li>
-              <li><strong>Note:</strong> {result.note}</li>
-              <li>
+            <ul className="list-group">
+              <li className="list-group-item"><strong>Crop:</strong> {result.crop}</li>
+              <li className="list-group-item"><strong>Location:</strong> {result.location}</li>
+              <li className="list-group-item"><strong>Fertilizer:</strong> {result.fertilizer}</li>
+              <li className="list-group-item"><strong>Dosage:</strong> {result.dosage}</li>
+              <li className="list-group-item"><strong>Note:</strong> {result.note}</li>
+              <li className="list-group-item">
                 📘 External Source:{' '}
                 <a href={result.source} target="_blank" rel="noreferrer">
                   View Fertilizer Details

@@ -1,104 +1,132 @@
-import React, { useEffect, useState } from 'react';
-// Sample India state + district data
-const indiaLocations = {
-  "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Erode"],
-  "Karnataka": ["Bengaluru", "Mysuru", "Hubli", "Mangaluru"],
-  "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik"],
-  "Punjab": ["Ludhiana", "Amritsar", "Patiala", "Jalandhar"],
-};
+import React, { useState, useEffect } from 'react';
 
 const LocationSelector = ({ onLocationSelect }) => {
-  const [autoLocation, setAutoLocation] = useState('');
-  const [useManual, setUseManual] = useState(false);
-  const [state, setState] = useState('');
-  const [district, setDistrict] = useState('');
+  const [locationMethod, setLocationMethod] = useState('manual');
+  const [manualLocation, setManualLocation] = useState('');
+  const [location, setLocation] = useState(null);
+  const [error, setError] = useState('');
+  const [locationFetched, setLocationFetched] = useState(false); // Added state to track if location is fetched
 
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      setUseManual(true);
-    } else {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setAutoLocation(`Lat: ${position.coords.latitude}, Lon: ${position.coords.longitude}`);
-          onLocationSelect("Detected via GPS");
-        },
-        () => setUseManual(true),
-        { timeout: 5000 }
-      );
-    }
-  }, [onLocationSelect]);
-
-  const handleManualSelect = () => {
-    if (state && district) {
-      const selectedLocation = `${district}, ${state}`;
-      onLocationSelect(selectedLocation);
+  const handleLocationMethodChange = (e) => {
+    setLocationMethod(e.target.value);
+    if (e.target.value === 'manual') {
+      setLocation(null); // Reset location when switching to manual
+      setLocationFetched(false); // Reset the fetched location flag
     }
   };
 
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const newLocation = `${latitude}, ${longitude}`; // or use a geocoding API for a more friendly location name
+          setLocation(newLocation);
+          onLocationSelect(newLocation);
+          setError('');
+          setLocationFetched(true); // Mark location as fetched
+        },
+        (err) => {
+          setLocation(null);
+          setError('Permission denied or unable to fetch location.');
+        }
+      );
+    } else {
+      setError('Geolocation is not supported by this browser.');
+    }
+  };
+
+  const handleManualLocationChange = (e) => {
+    setManualLocation(e.target.value);
+  };
+
+  // Trigger location selection automatically on method change
+  useEffect(() => {
+    if (locationMethod === 'gps' && location === null && !locationFetched) {
+      // Only trigger GPS location fetch when switching to GPS and location not fetched yet
+      getLocation();
+    }
+  }, [locationMethod, locationFetched]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (locationMethod === 'manual' && manualLocation) {
+      onLocationSelect(manualLocation);
+      setLocation(manualLocation);
+      setLocationFetched(true); // Mark location as manually selected
+    } else if (locationMethod === 'gps' && location) {
+      onLocationSelect(location);
+    }
+  };
+
+  // Reset location on page refresh
+  useEffect(() => {
+    setLocation(null);
+    setLocationFetched(false);
+  }, []);
+
   return (
-    <div>
-      {autoLocation && !useManual && (
-        <div className="alert alert-info py-2">
-          📍 Location detected: <strong>{autoLocation}</strong>
-          <div>
-            <button
-              className="btn btn-sm btn-outline-secondary mt-2"
-              onClick={() => setUseManual(true)}
-            >
-              Select manually instead
-            </button>
-          </div>
+    <form onSubmit={handleSubmit}>
+      <div className="mb-3">
+        <label className="form-label">Select Location Method</label>
+        <div>
+          <label>
+            <input
+              type="radio"
+              name="locationMethod"
+              value="manual"
+              checked={locationMethod === 'manual'}
+              onChange={handleLocationMethodChange}
+            />{' '}
+            Manual
+          </label>
+          <label className="ms-3">
+            <input
+              type="radio"
+              name="locationMethod"
+              value="gps"
+              checked={locationMethod === 'gps'}
+              onChange={handleLocationMethodChange}
+            />{' '}
+            GPS
+          </label>
+        </div>
+      </div>
+
+      {locationMethod === 'manual' && (
+        <div className="mb-3">
+          <label className="form-label">Enter Location</label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter your location"
+            value={manualLocation}
+            onChange={handleManualLocationChange}
+            required
+          />
         </div>
       )}
 
-      {useManual && (
-        <div className="border rounded p-3">
-         
-
-          <p className="fw-bold mb-2">Select Location Manually</p>
-          <div className="mb-2">
-            <label>State</label>
-            <select
-              className="form-select"
-              value={state}
-              onChange={(e) => {
-                setState(e.target.value);
-                setDistrict('');
-              }}
-            >
-              <option value="">Select State</option>
-              {Object.keys(indiaLocations).map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {state && (
-            <div className="mb-2">
-              <label>District</label>
-              <select
-                className="form-select"
-                value={district}
-                onChange={(e) => setDistrict(e.target.value)}
-              >
-                <option value="">Select District</option>
-                {indiaLocations[state].map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          <button className="btn btn-success mt-2" onClick={handleManualSelect} disabled={!district}>
-            Confirm Location
+      {locationMethod === 'gps' && !locationFetched && (
+        <div className="mb-3">
+          <button type="button" className="btn btn-primary" onClick={getLocation}>
+            Get GPS Location
           </button>
         </div>
       )}
-    </div>
+
+      {location && locationFetched && (
+        <div className="form-text text-success mt-1">
+          <strong>Selected Location:</strong> <strong>{location}</strong>
+        </div>
+      )}
+
+      {error && (
+        <div className="form-text text-danger mt-1">
+          <strong>{error}</strong>
+        </div>
+      )}
+    </form>
   );
 };
 
