@@ -31,6 +31,10 @@ app.use('/recommend', recommendationRoutes);
 const cropRoutes = require('./routes/cropRoutes');
 app.use('/api/crops', cropRoutes);
 
+//profile routes
+const profileRoutes = require('./routes/profileRoutes');
+app.use('/api/profile', profileRoutes);
+
 // Market Prices Fetch (Agmarknet)
 cron.schedule('0 6 * * *', () => {
   console.log('⏰ Running scheduled market price fetch...');

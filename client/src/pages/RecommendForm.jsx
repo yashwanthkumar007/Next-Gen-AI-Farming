@@ -35,8 +35,9 @@ const RecommendForm = () => {
   };
 
   return (
+    
     <div className="container mt-5">
-      <NavbarWithLogout/>
+      
       <h3>🌿 Get Crop Recommendation</h3>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">

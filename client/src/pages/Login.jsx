@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'animate.css';
-import {Link } from 'react-router-dom';
 
 const Login = () => {
   const [role, setRole] = useState('farmer');
@@ -16,17 +15,21 @@ const Login = () => {
       const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: username, password })
+        body: JSON.stringify({ email: username, password }),
       });
-  
+
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('userRole', data.user.role);
-  
+
+        // Navigate to dashboard
         if (data.user.role === 'farmer') navigate('/farmer-dashboard');
         else if (data.user.role === 'buyer') navigate('/buyer-dashboard');
         else if (data.user.role === 'admin') navigate('/admin-dashboard');
+
+        // Force App.js to re-render and show navbar
+        setTimeout(() => window.location.reload(), 100);
       } else {
         alert(data.error || 'Login failed');
       }
@@ -35,7 +38,6 @@ const Login = () => {
       alert('Something went wrong');
     }
   };
-  
 
   return (
     <div
@@ -72,7 +74,7 @@ const Login = () => {
               className="form-control shadow-sm"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your username"
+              placeholder="Enter your email"
               required
             />
           </div>
@@ -93,14 +95,13 @@ const Login = () => {
         </form>
 
         <div className="text-center mt-3">
-  <small className="text-muted">
-    Don't have an account?{' '}
-    <Link to="/register" className="text-decoration-none">
-      Register here
-    </Link>
-  </small>
-</div>
-
+          <small className="text-muted">
+            Don't have an account?{' '}
+            <Link to="/register" className="text-decoration-none">
+              Register here
+            </Link>
+          </small>
+        </div>
       </div>
     </div>
   );
