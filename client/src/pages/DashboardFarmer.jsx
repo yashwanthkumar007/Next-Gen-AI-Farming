@@ -15,7 +15,10 @@ const DashboardFarmer = () => {
   return (
     <div style={{ backgroundColor: '#f0f9f1', minHeight: '100vh' }}>
       <div className="container py-5">
-      <NavbarWithLogout />
+     
+      <button className="btn btn-outline-primary me-2" onClick={() => navigate('/profile')}>
+  👤 My Profile
+</button>
 
         <div className="text-center mb-4">
           <h2 className="text-success">👨‍🌾 Farmer Dashboard</h2>

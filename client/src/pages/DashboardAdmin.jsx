@@ -1,12 +1,12 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import NavbarWithLogout from '../components/NavbarWithLogout';
+
 
 const DashboardAdmin = () => {
   return (
     <div style={{ background: '#f9f9fc', minHeight: '100vh' }}>
       <div className="container py-5">
-      <NavbarWithLogout />
+   
 
         <div className="text-center mb-4">
           <h2 className="text-primary">🧑‍💼 Admin Dashboard</h2>

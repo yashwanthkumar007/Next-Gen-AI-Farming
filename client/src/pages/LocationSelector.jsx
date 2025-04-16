@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import NavbarWithLogout from '../components/NavbarWithLogout';
 // Sample India state + district data
 const indiaLocations = {
   "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Erode"],
@@ -54,7 +53,7 @@ const LocationSelector = ({ onLocationSelect }) => {
 
       {useManual && (
         <div className="border rounded p-3">
-          <NavbarWithLogout />
+         
 
           <p className="fw-bold mb-2">Select Location Manually</p>
           <div className="mb-2">
