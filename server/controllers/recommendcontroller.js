@@ -1,254 +1,170 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const axios = require('axios');
-
-const router = express.Router();
-
-router.use(bodyParser.json());
-
 const recommendcontroller = {
-  'Rice': {
-    'fertilizer': 'Urea, DAP, MOP',
-    'dosage': '100kg/acre',
-    'note': 'Apply during early tillering stage.',
-    'source': 'http://example.com/rice-fertilizer-details'
-  },
-  'Wheat': {
-    'fertilizer': 'Urea, DAP, MOP',
-    'dosage': '120kg/acre',
-    'note': 'Apply in 2 equal splits.',
-    'source': 'http://example.com/wheat-fertilizer-details'
-  },
-  'Maize': {
-    'fertilizer': 'Urea, DAP, MOP',
-    'dosage': '150kg/acre',
-    'note': 'Apply at 3-leaf stage.',
-    'source': 'http://example.com/maize-fertilizer-details'
-  },
-  'Barley': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '130kg/acre',
-        'note': 'Apply during early tillering.',
-        'source': 'http://example.com/barley-fertilizer-details'
-    },
-    'Sorghum (Jowar)': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '110kg/acre',
-        'note': 'Apply at flowering stage.',
-        'source': 'http://example.com/sorghum-fertilizer-details'
-    },
-    'Pearl Millet (Bajra)': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '90kg/acre',
-        'note': 'Apply during initial growth.',
-        'source': 'http://example.com/pearl-millet-fertilizer-details'
-    },
-    'Finger Millet (Ragi)': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '120kg/acre',
-        'note': 'Apply during early tillering.',
-        'source': 'http://example.com/finger-millet-fertilizer-details'
-    },
-    'Oats': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '100kg/acre',
-        'note': 'Apply before sowing.',
-        'source': 'http://example.com/oats-fertilizer-details'
-    },
-    'Foxtail Millet': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '95kg/acre',
-        'note': 'Apply at sowing.',
-        'source': 'http://example.com/foxtail-millet-fertilizer-details'
-    },
-    'Kodo Millet': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '80kg/acre',
-        'note': 'Apply during flowering.',
-        'source': 'http://example.com/kodo-millet-fertilizer-details'
-    },
-    'Bengal Gram (Chana)': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '60kg/acre',
-        'note': 'Apply at sowing and flowering.',
-        'source': 'http://example.com/bengal-gram-fertilizer-details'
-    },
-    'Pigeon Pea (Arhar/Tur)': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '100kg/acre',
-        'note': 'Apply at early flowering.',
-        'source': 'http://example.com/pigeon-pea-fertilizer-details'
-    },
-    'Green Gram (Moong)': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '80kg/acre',
-        'note': 'Apply at sowing and early flowering.',
-        'source': 'http://example.com/green-gram-fertilizer-details'
-    },
-    'Black Gram (Urad)': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '70kg/acre',
-        'note': 'Apply before sowing.',
-        'source': 'http://example.com/black-gram-fertilizer-details'
-    },
-    'Lentil (Masoor)': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '90kg/acre',
-        'note': 'Apply at early flowering.',
-        'source': 'http://example.com/lentil-fertilizer-details'
-    },
-    'Horse Gram': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '80kg/acre',
-        'note': 'Apply at sowing.',
-        'source': 'http://example.com/horse-gram-fertilizer-details'
-    },
-    'Cowpea': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '100kg/acre',
-        'note': 'Apply at flowering.',
-        'source': 'http://example.com/cowpea-fertilizer-details'
-    },
-    'Rajma (Kidney Beans)': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '70kg/acre',
-        'note': 'Apply at sowing.',
-        'source': 'http://example.com/rajma-fertilizer-details'
-    },
-    'Moth Bean': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '50kg/acre',
-        'note': 'Apply at sowing and flowering.',
-        'source': 'http://example.com/moth-bean-fertilizer-details'
-    },
-    'Field Pea': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '80kg/acre',
-        'note': 'Apply at early flowering.',
-        'source': 'http://example.com/field-pea-fertilizer-details'
-    },
-    'Groundnut (Peanut)': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '100kg/acre',
-        'note': 'Apply at sowing.',
-        'source': 'http://example.com/groundnut-fertilizer-details'
-    },
-    'Mustard': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '120kg/acre',
-        'note': 'Apply before sowing.',
-        'source': 'http://example.com/mustard-fertilizer-details'
-    },
-    'Soybean': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '110kg/acre',
-        'note': 'Apply during early flowering.',
-        'source': 'http://example.com/soybean-fertilizer-details'
-    },
-    'Sunflower': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '130kg/acre',
-        'note': 'Apply during early stages.',
-        'source': 'http://example.com/sunflower-fertilizer-details'
-    },
-    'Sesame (Til)': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '100kg/acre',
-        'note': 'Apply at sowing.',
-        'source': 'http://example.com/sesame-fertilizer-details'
-    },
-    'Safflower': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '110kg/acre',
-        'note': 'Apply at sowing.',
-        'source': 'http://example.com/safflower-fertilizer-details'
-    },
-    'Linseed (Flaxseed)': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '120kg/acre',
-        'note': 'Apply during early growth stage.',
-        'source': 'http://example.com/linseed-fertilizer-details'
-    },
-    'Castor': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '130kg/acre',
-        'note': 'Apply during flowering.',
-        'source': 'http://example.com/castor-fertilizer-details'
-    },
-    'Niger seed': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '90kg/acre',
-        'note': 'Apply at sowing.',
-        'source': 'http://example.com/niger-seed-fertilizer-details'
-    },
-    'Cottonseed': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '100kg/acre',
-        'note': 'Apply during early growth stage.',
-        'source': 'http://example.com/cottonseed-fertilizer-details'
-    },
-    'Potato': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '150kg/acre',
-        'note': 'Apply during early growth stage.',
-        'source': 'http://example.com/potato-fertilizer-details'
-    },
-    'Tomato': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '120kg/acre',
-        'note': 'Apply during flowering stage.',
-        'source': 'http://example.com/tomato-fertilizer-details'
-    },
-    'Onion': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '100kg/acre',
-        'note': 'Apply at sowing.',
-        'source': 'http://example.com/onion-fertilizer-details'
-    },
-  // ... (you can continue adding the remaining crops here)
-};
-// Example of getCropRecommendation function (you can modify as per your requirements)
-const getCropRecommendation = (req, res) => {
-    // Logic for crop recommendation based on request data
-    const crop = req.body.crop;  // Example: Fetch crop from request body
-    if (crop) {
-      res.json({ message: `Recommendations for ${crop}` });
-    } else {
-      res.status(400).json({ error: 'Crop not specified' });
+  getCropRecommendation: async (req, res) => {
+    try {
+      const { crop, location } = req.body;
+
+      // Sample logic – this can later be replaced with DB/AI logic
+      const fertilizerPlans = {
+        rice: {
+          fertilizer: "Urea",
+          dosage: "60 kg/acre",
+          note: "Apply half at transplanting and half after 3 weeks.",
+        },
+        wheat: {
+          fertilizer: "DAP",
+          dosage: "50 kg/acre",
+          note: "Apply at the time of sowing.",
+        },
+        maize: {
+          fertilizer: "NPK 20-20-0",
+          dosage: "70 kg/acre",
+          note: "Use split dose during vegetative phase.",
+        },
+        soybean: {
+            fertilizer: "DAP",
+            dosage: "50 kg/acre",
+            note: "Apply at sowing time.",
+          },
+          sunflower: {
+            fertilizer: "NPK 20:20:0",
+            dosage: "60 kg/acre",
+            note: "Split dose: sowing and budding stage.",
+          },
+          otato: {
+            fertilizer: "NPK 12:32:16",
+            dosage: "100 kg/acre",
+            note: "Apply during field preparation.",
+          },
+          tomato: {
+            fertilizer: "NPK 19:19:19",
+            dosage: "80 kg/acre",
+            note: "Split application at transplanting and flowering.",
+          },
+          onion: {
+            fertilizer: "DAP + Urea",
+            dosage: "70 kg/acre",
+            note: "Apply in 2 doses after transplanting.",
+          },
+          brinjal: {
+            fertilizer: "NPK 10:26:26",
+            dosage: "60 kg/acre",
+            note: "Apply in two splits after transplanting.",
+          },
+          cauliflower: {
+            fertilizer: "NPK 15:15:15",
+            dosage: "70 kg/acre",
+            note: "Apply before and after curd formation.",
+          },
+          cabbage: {
+            fertilizer: "Urea + Compost",
+            dosage: "60 kg/acre",
+            note: "Apply before and 30 days after transplanting.",
+          },
+          mango: {
+            fertilizer: "NPK 6:6:6",
+            dosage: "1 kg/tree/year",
+            note: "Apply in split doses during monsoon and post-monsoon.",
+          },
+          banana: {
+            fertilizer: "Urea + MOP",
+            dosage: "150 gm/plant/month",
+            note: "Apply monthly till fruiting.",
+          },
+          guava: {
+            fertilizer: "Farmyard Manure + NPK",
+            dosage: "2 kg/tree/year",
+            note: "Apply before flowering.",
+          },
+          papaya: {
+            fertilizer: "Urea + DAP",
+            dosage: "200 gm/plant/month",
+            note: "Apply monthly till harvesting.",
+          },
+          apple: {
+            fertilizer: "NPK 10:10:10",
+            dosage: "2 kg/tree/year",
+            note: "Apply in spring before flowering.",
+          },
+          pomegranate: {
+            fertilizer: "Compost + NPK",
+            dosage: "3 kg/tree/year",
+            note: "Apply before flowering season.",
+          },
+          orange: {
+            fertilizer: "Farmyard Manure + NPK",
+            dosage: "2 kg/tree/year",
+            note: "Apply in two equal splits.",
+          },
+          sweetLime: {
+            fertilizer: "Urea + MOP",
+            dosage: "1.5 kg/tree/year",
+            note: "Apply before and after flowering.",
+          },
+          sapota: {
+            fertilizer: "Compost + Urea",
+            dosage: "3 kg/tree/year",
+            note: "Apply once annually.",
+          },
+          jackfruit: {
+            fertilizer: "NPK 6:6:6",
+            dosage: "2 kg/tree/year",
+            note: "Apply before monsoon.",
+          },
+          pineapple: {
+            fertilizer: "NPK 10:10:10",
+            dosage: "30 gm/plant/month",
+            note: "Apply every 45 days.",
+          },
+          watermelon: {
+            fertilizer: "Urea",
+            dosage: "40 kg/acre",
+            note: "Apply at vine development stage.",
+          },
+          muskmelon: {
+            fertilizer: "Compost + Urea",
+            dosage: "35 kg/acre",
+            note: "Apply before flowering.",
+          },
+          grapes: {
+            fertilizer: "FYM + NPK",
+            dosage: "4 kg/vine/year",
+            note: "Apply post-pruning.",
+          },
+          litchi: {
+            fertilizer: "Organic Compost",
+            dosage: "5 kg/tree/year",
+            note: "Apply annually during spring.",
+          },
+      };
+
+      const recommendation = fertilizerPlans[crop?.toLowerCase()];
+
+      if (!recommendation) {
+        return res.status(404).json({ message: "No recommendation found for the crop." });
+      }
+
+      return res.json({
+        crop,
+        location,
+        fertilizer: recommendation.fertilizer,
+        dosage: recommendation.dosage,
+        note: recommendation.note,
+      });
+    } catch (err) {
+      console.error("Error in getCropRecommendation:", err);
+      return res.status(500).json({ message: "Server Error" });
     }
-  };
+  },
 
-const getFlaskPrediction = async (req, res) => {
-  try {
-    const flaskURL = process.env.FLASK_URL || 'http://127.0.0.1:5001/predict';
-    const response = await axios.post(flaskURL, req.body);
-
-    res.status(200).json({
-      status: 'success',
-      data: response.data.data,
-    });
-  } catch (error) {
-    console.error('Error connecting to Flask:', error.message);
-    res.status(500).json({
-      status: 'error',
-      message: 'Could not get prediction from AI model.',
-    });
-  }
+  getFlaskPrediction: async (req, res) => {
+    try {
+      // your Flask logic here if any
+      res.json({ message: "Flask integration pending" });
+    } catch (error) {
+      console.error("Error in getFlaskPrediction:", error);
+      res.status(500).json({ message: "Flask server error" });
+    }
+  },
 };
 
-router.post('/api/fertilizer', (req, res) => {
-  const crop = req.body.crop;
-
-  if (recommendcontroller[crop]) {
-    res.json(recommendcontroller[crop]);
-  } else {
-    res.status(404).json({ error: 'Crop not found.' });
-  }
-});
-
-router.post('/api/ai/fertilizer', getFlaskPrediction);
-
-module.exports = {
-    getFlaskPrediction,
-    getCropRecommendation
-  };
+module.exports = recommendcontroller;
