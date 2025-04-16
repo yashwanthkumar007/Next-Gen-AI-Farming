@@ -9,10 +9,17 @@ import CropMarket from "./pages/CropMarket";
 import CropListingForm from "./pages/CropListingForm";
 import CropMarketPrices from "./pages/CropMarketPrices";
 import Register from './pages/Register';
+import profile from './pages/UserProfile';
+import UserProfile from "./pages/UserProfile";
+import NavbarWithLogout from "./components/NavbarWithLogout";
 
 function App() {
+  const token = localStorage.getItem('token'); // ✅ Check token
+
   return (
     <Router>
+      {token && <NavbarWithLogout />} {/* ✅ Only show if logged in */}
+      
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -23,6 +30,7 @@ function App() {
         <Route path="/market" element={<CropMarket />} />
         <Route path="/list-crop" element={<CropListingForm />} />
         <Route path="/market-prices" element={<CropMarketPrices />} />
+        <Route path="/profile" element={<UserProfile />} />
       </Routes>
     </Router>
   );

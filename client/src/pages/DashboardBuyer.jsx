@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'animate.css';
+import { useNavigate } from 'react-router-dom';
 import NavbarWithLogout from '../components/NavbarWithLogout';
+
 const DashboardBuyer = () => {
+  const navigate = useNavigate();
   const [crops, setCrops] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -43,9 +46,17 @@ const DashboardBuyer = () => {
   return (
     <div className="bg-light min-vh-100 px-3 py-5 animate__animated animate__fadeIn">
       <div className="container">
-      <NavbarWithLogout />
+        <NavbarWithLogout />
 
-        <h3 className="text-warning text-center mb-4">🛒 Buyer Dashboard</h3>
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h3 className="text-warning">🛒 Buyer Dashboard</h3>
+          <button
+            className="btn btn-outline-primary btn-sm"
+            onClick={() => navigate('/profile')}
+          >
+            👤 My Profile
+          </button>
+        </div>
 
         {loading ? (
           <div className="text-center mt-5">

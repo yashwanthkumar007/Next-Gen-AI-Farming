@@ -34,8 +34,14 @@ const RecommendForm = () => {
   };
 
   return (
+    
     <div className="container mt-5">
+<<<<<<< HEAD
       <h3 className="mb-4">🧪 Fertilizer Recommendation</h3>
+=======
+      
+      <h3>🌿 Get Crop Recommendation</h3>
+>>>>>>> 093ee6312fc0acb31bed6d78ca2cb78b460427b2
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label>Crop Name</label>
