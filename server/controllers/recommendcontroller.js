@@ -1,52 +1,31 @@
+const express = require('express');
+const bodyParser = require('body-parser');
 const axios = require('axios');
 
-exports.getFlaskPrediction = async (req, res) => {
-    try {
-        const flaskURL = process.env.FLASK_URL || 'http://127.0.0.1:5001/predict';
+const router = express.Router();
 
-        const response = await axios.post(flaskURL, req.body);
+router.use(bodyParser.json());
 
-        res.status(200).json({
-            status: 'success',
-            data: response.data.data,
-        });
-    } catch (error) {
-        console.error('Error connecting to Flask:', error.message);
-        res.status(500).json({
-            status: 'error',
-            message: 'Could not get prediction from AI model.',
-        });
-    }const express = require('express');
-    const bodyParser = require('body-parser');
-    const axios = require('axios');
-    
-    const app = express();
-    const port = 5000;
-    
-    // Middleware to parse JSON request bodies
-    app.use(bodyParser.json());
-    
-    // Sample data for crops and their fertilizer recommendations
-    const cropRecommendations = {
-      'Rice': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '100kg/acre',
-        'note': 'Apply during early tillering stage.',
-        'source': 'http://example.com/rice-fertilizer-details'
-      },
-      'Wheat': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '120kg/acre',
-        'note': 'Apply in 2 equal splits.',
-        'source': 'http://example.com/wheat-fertilizer-details'
-      },
-      'Maize': {
-        'fertilizer': 'Urea, DAP, MOP',
-        'dosage': '150kg/acre',
-        'note': 'Apply at 3-leaf stage.',
-        'source': 'http://example.com/maize-fertilizer-details'
-      },
-      'Barley': {
+const recommendcontroller = {
+  'Rice': {
+    'fertilizer': 'Urea, DAP, MOP',
+    'dosage': '100kg/acre',
+    'note': 'Apply during early tillering stage.',
+    'source': 'http://example.com/rice-fertilizer-details'
+  },
+  'Wheat': {
+    'fertilizer': 'Urea, DAP, MOP',
+    'dosage': '120kg/acre',
+    'note': 'Apply in 2 equal splits.',
+    'source': 'http://example.com/wheat-fertilizer-details'
+  },
+  'Maize': {
+    'fertilizer': 'Urea, DAP, MOP',
+    'dosage': '150kg/acre',
+    'note': 'Apply at 3-leaf stage.',
+    'source': 'http://example.com/maize-fertilizer-details'
+  },
+  'Barley': {
         'fertilizer': 'Urea, DAP, MOP',
         'dosage': '130kg/acre',
         'note': 'Apply during early tillering.',
@@ -226,46 +205,50 @@ exports.getFlaskPrediction = async (req, res) => {
         'note': 'Apply at sowing.',
         'source': 'http://example.com/onion-fertilizer-details'
     },
-      // Add more crops here...
-    };
-    
-    // Function to get prediction from the Flask AI model
-    const getFlaskPrediction = async (req, res) => {
-      try {
-        const flaskURL = process.env.FLASK_URL || 'http://127.0.0.1:5001/predict';
-    
-        const response = await axios.post(flaskURL, req.body);
-    
-        res.status(200).json({
-          status: 'success',
-          data: response.data.data,
-        });
-      } catch (error) {
-        console.error('Error connecting to Flask:', error.message);
-        res.status(500).json({
-          status: 'error',
-          message: 'Could not get prediction from AI model.',
-        });
-      }
-    };
-    
-    // Endpoint for fertilizer recommendations
-    app.post('/api/fertilizer', async (req, res) => {
-      const crop = req.body.crop;
-    
-      if (cropRecommendations[crop]) {
-        res.json(cropRecommendations[crop]);
-      } else {
-        res.status(404).json({ error: 'Crop not found.' });
-      }
-    });
-    
-    // Endpoint to get fertilizer recommendation from AI model (Flask integration)
-    app.post('/api/ai/fertilizer', getFlaskPrediction);
-    
-    // Start the server
-    app.listen(port, () => {
-      console.log(`Server running at http://localhost:${port}`);
-    });
-    
+  // ... (you can continue adding the remaining crops here)
 };
+// Example of getCropRecommendation function (you can modify as per your requirements)
+const getCropRecommendation = (req, res) => {
+    // Logic for crop recommendation based on request data
+    const crop = req.body.crop;  // Example: Fetch crop from request body
+    if (crop) {
+      res.json({ message: `Recommendations for ${crop}` });
+    } else {
+      res.status(400).json({ error: 'Crop not specified' });
+    }
+  };
+
+const getFlaskPrediction = async (req, res) => {
+  try {
+    const flaskURL = process.env.FLASK_URL || 'http://127.0.0.1:5001/predict';
+    const response = await axios.post(flaskURL, req.body);
+
+    res.status(200).json({
+      status: 'success',
+      data: response.data.data,
+    });
+  } catch (error) {
+    console.error('Error connecting to Flask:', error.message);
+    res.status(500).json({
+      status: 'error',
+      message: 'Could not get prediction from AI model.',
+    });
+  }
+};
+
+router.post('/api/fertilizer', (req, res) => {
+  const crop = req.body.crop;
+
+  if (recommendcontroller[crop]) {
+    res.json(recommendcontroller[crop]);
+  } else {
+    res.status(404).json({ error: 'Crop not found.' });
+  }
+});
+
+router.post('/api/ai/fertilizer', getFlaskPrediction);
+
+module.exports = {
+    getFlaskPrediction,
+    getCropRecommendation
+  };
