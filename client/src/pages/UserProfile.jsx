@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import NavbarWithLogout from '../components/NavbarWithLogout';
+import { useNavigate } from 'react-router-dom';
 
 const UserProfile = () => {
   const [formData, setFormData] = useState({
@@ -13,8 +14,8 @@ const UserProfile = () => {
   });
   const [editMode, setEditMode] = useState(false);
   const [message, setMessage] = useState('');
-
   const token = localStorage.getItem('token');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -54,8 +55,6 @@ const UserProfile = () => {
   return (
     <div className="bg-light min-vh-100 px-3 py-5">
       <div className="container">
-        
-
         <div className="card shadow p-4 mx-auto" style={{ maxWidth: 550 }}>
           <h3 className="text-center text-success mb-3">👤 My Profile</h3>
 
@@ -117,9 +116,14 @@ const UserProfile = () => {
               <button className="btn btn-success" onClick={handleSave}>Save</button>
             </div>
           ) : (
-            <button className="btn btn-outline-primary w-100" onClick={() => setEditMode(true)}>
-              ✏️ Edit Profile
-            </button>
+            <div className="d-flex justify-content-between">
+              <button className="btn btn-outline-primary" onClick={() => setEditMode(true)}>
+                ✏️ Edit Profile
+              </button>
+              <button className="btn btn-link" onClick={() => navigate(-1)}>
+                ⬅️ Back
+              </button>
+            </div>
           )}
         </div>
       </div>
