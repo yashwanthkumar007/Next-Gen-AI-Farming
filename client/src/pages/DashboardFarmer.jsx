@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import LeafColorChecker from './LeafColorChecker';
 import NavbarWithLogout from '../components/NavbarWithLogout';
 
 const DashboardFarmer = () => {
@@ -37,6 +38,15 @@ const DashboardFarmer = () => {
           <button className="btn btn-outline-secondary w-100">
             View Crop Market (Coming Soon)
           </button>
+          
+          <button className="btn btn-outline-success w-100 mb-3 mt-3" onClick={() =>navigate('/leaf-color-checker')}>
+            🍃 Leaf Color Chart
+          </button>
+
+          <button className="btn btn-outline-success w-100 mb-3" onClick={() =>navigate('/soil-health')}>
+            SoilHealth 
+          </button>
+
         </div>
       </div>
     </div>

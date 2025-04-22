@@ -43,6 +43,17 @@ cron.schedule("0 6 * * *", () => {
   fetchMarketPrices();
 });
 
+//uploads
+app.use('/uploads', express.static('uploads'));
+
+//lcc
+const lccRoute = require('./routes/lccRoute');
+app.use('/api/lcc', lccRoute);
+
+//soli health form
+const soilHealthRoutes = require('./routes/soilHealthRoutes');
+app.use('/api/soil-health', soilHealthRoutes);
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
