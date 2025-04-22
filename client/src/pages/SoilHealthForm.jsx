@@ -26,7 +26,7 @@ const SoilHealthForm = () => {
     setLoading(true);
     try {
       const res = await axios.post('http://localhost:5000/api/soil-health', formData);
-      setResult(res.data);
+      setResult(res.data.data);
     } catch (err) {
       console.error(err);
       setResult({ error: 'Something went wrong. Please try again.' });
