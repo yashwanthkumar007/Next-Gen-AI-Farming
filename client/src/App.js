@@ -9,7 +9,9 @@ import CropMarket from "./pages/CropMarket";
 import CropListingForm from "./pages/CropListingForm";
 import CropMarketPrices from "./pages/CropMarketPrices";
 import Register from './pages/Register';
+import SoilHealthForm from './pages/SoilHealthForm';
 import profile from './pages/UserProfile';
+import LeafColorChecker from "./pages/LeafColorChecker";
 import UserProfile from "./pages/UserProfile";
 import NavbarWithLogout from "./components/NavbarWithLogout";
 
@@ -29,7 +31,9 @@ function App() {
         <Route path="/buyer-dashboard" element={<DashboardBuyer />} />
         <Route path="/market" element={<CropMarket />} />
         <Route path="/list-crop" element={<CropListingForm />} />
+        <Route path="/leaf-color-checker" element={<LeafColorChecker />} />
         <Route path="/market-prices" element={<CropMarketPrices />} />
+        <Route path="/soil-health" element={<SoilHealthForm />} />
         <Route path="/profile" element={<UserProfile />} />
       </Routes>
     </Router>
