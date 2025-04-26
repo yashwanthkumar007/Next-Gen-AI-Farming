@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LeafColorChecker from './LeafColorChecker';
-import NavbarWithLogout from '../components/NavbarWithLogout';
+
 
 const DashboardFarmer = () => {
   const navigate = useNavigate();

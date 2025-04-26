@@ -35,4 +35,36 @@ router.get('/', async (req, res) => {
   }
 });
 
+// POST /api/crops/express-interest
+// Express Interest API
+router.post('/express-interest', async (req, res) => {
+  try {
+    const { cropId, buyQuantity } = req.body;
+
+    if (!cropId || !buyQuantity) {
+      return res.status(400).json({ error: 'Missing cropId or buyQuantity' });
+    }
+
+    const crop = await Crop.findById(cropId);
+    if (!crop) {
+      return res.status(404).json({ error: 'Crop not found' });
+    }
+
+    if (crop.quantity < buyQuantity) {
+      return res.status(400).json({ error: 'Not enough stock available' });
+    }
+
+    // Reduce quantity
+    crop.quantity -= buyQuantity;
+
+    await crop.save();
+
+    res.json({ message: 'Interest submitted successfully', updatedCrop: crop });
+  } catch (err) {
+    console.error('Express Interest Error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
 module.exports = router;

@@ -7,6 +7,9 @@ const DashboardBuyer = () => {
   const navigate = useNavigate();
   const [crops, setCrops] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedCrop, setSelectedCrop] = useState(null);
+  const [interestQuantity, setInterestQuantity] = useState('');
 
   useEffect(() => {
     const fetchCrops = async () => {
@@ -25,9 +28,35 @@ const DashboardBuyer = () => {
     fetchCrops();
   }, []);
 
-  const handleInterest = (crop) => {
-    alert(`✅ You have expressed interest in buying ${crop.name} from ${crop.farmer || 'Farmer'}`);
-    // Optional: Later call POST /api/crops/:id/interest to reduce quantity
+  const handleInterestClick = (crop) => {
+    setSelectedCrop(crop);
+    setShowModal(true);
+  };
+
+  const handleSubmitInterest = async () => {
+    if (!selectedCrop || !interestQuantity) return;
+
+    try {
+      const res = await fetch('http://localhost:5000/api/crops/express-interest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cropId: selectedCrop._id, buyQuantity: parseInt(interestQuantity) })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert('✅ Interest submitted successfully!');
+        setShowModal(false);
+        setInterestQuantity('');
+        window.location.reload(); // Refresh crop list
+      } else {
+        alert(`❌ ${data.error}`);
+      }
+    } catch (err) {
+      console.error('❌ Error submitting interest:', err);
+      alert('❌ Something went wrong. Try again.');
+    }
   };
 
   return (
@@ -60,21 +89,21 @@ const DashboardBuyer = () => {
                   <h5 className="text-success">{crop.name}</h5>
                   <ul className="list-unstyled small text-muted mb-2">
                     <li>📍 {crop.location}</li>
-                    <li>🧺 Quantity: {crop.quantity}kg</li>
+                    <li>🧺 Quantity: {crop.quantity} kg</li>
                     <li>💰 Price: {crop.price}</li>
                     <li>
-                      👨‍🌾 Farmer:{' '}
+                      👨‍🌾 Farmer: 
                       <button
                         className="btn btn-link p-0"
                         onClick={() => navigate(`/farmer/${crop.farmerId}`)}
                       >
-                        {crop.farmer || 'N/A'}
+                        {crop.farmer || 'Unknown'}
                       </button>
                     </li>
                   </ul>
                   <button
                     className="btn btn-sm btn-outline-warning w-100"
-                    onClick={() => handleInterest(crop)}
+                    onClick={() => handleInterestClick(crop)}
                   >
                     Express Interest
                   </button>
@@ -84,6 +113,29 @@ const DashboardBuyer = () => {
           </div>
         )}
       </div>
+
+      {/* Modal for Express Interest */}
+      {showModal && (
+        <div className="modal show fade d-block" tabIndex="-1">
+          <div className="modal-dialog">
+            <div className="modal-content p-4">
+              <h5 className="mb-3">Express Interest</h5>
+              <p>How much quantity (kg) you want to buy?</p>
+              <input
+                type="number"
+                className="form-control"
+                value={interestQuantity}
+                onChange={(e) => setInterestQuantity(e.target.value)}
+                min={1}
+              />
+              <div className="d-flex justify-content-end gap-2 mt-4">
+                <button className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+                <button className="btn btn-success" onClick={handleSubmitInterest}>Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
