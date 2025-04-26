@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'animate.css';
 import { useNavigate } from 'react-router-dom';
-import NavbarWithLogout from '../components/NavbarWithLogout';
 
 const DashboardBuyer = () => {
   const navigate = useNavigate();
@@ -10,44 +9,30 @@ const DashboardBuyer = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate fetching from backend
-    setTimeout(() => {
-      setCrops([
-        {
-          name: 'Tomato',
-          quantity: '300kg',
-          price: '₹25/kg',
-          location: 'Coimbatore',
-          farmer: 'Velu',
-        },
-        {
-          name: 'Chili',
-          quantity: '100kg',
-          price: '₹60/kg',
-          location: 'Madurai',
-          farmer: 'Ravi',
-        },
-        {
-          name: 'Brinjal',
-          quantity: '80kg',
-          price: '₹30/kg',
-          location: 'Salem',
-          farmer: 'Meena',
-        },
-      ]);
-      setLoading(false);
-    }, 1000);
+    const fetchCrops = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/api/crops');
+        const data = await res.json();
+        setCrops(data);
+      } catch (err) {
+        console.error('Error fetching crops:', err);
+        setCrops([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCrops();
   }, []);
 
   const handleInterest = (crop) => {
-    alert(`✅ You have expressed interest in buying ${crop.name} from ${crop.farmer}`);
+    alert(`✅ You have expressed interest in buying ${crop.name} from ${crop.farmer || 'Farmer'}`);
+    // Optional: Later call POST /api/crops/:id/interest to reduce quantity
   };
 
   return (
     <div className="bg-light min-vh-100 px-3 py-5 animate__animated animate__fadeIn">
       <div className="container">
-        <NavbarWithLogout />
-
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h3 className="text-warning">🛒 Buyer Dashboard</h3>
           <button
@@ -63,6 +48,10 @@ const DashboardBuyer = () => {
             <div className="spinner-border text-warning" role="status" />
             <p className="text-muted mt-2">Loading crop listings...</p>
           </div>
+        ) : crops.length === 0 ? (
+          <div className="text-center mt-5 text-muted">
+            🚫 Market is currently unavailable.
+          </div>
         ) : (
           <div className="row g-4">
             {crops.map((crop, index) => (
@@ -71,9 +60,17 @@ const DashboardBuyer = () => {
                   <h5 className="text-success">{crop.name}</h5>
                   <ul className="list-unstyled small text-muted mb-2">
                     <li>📍 {crop.location}</li>
-                    <li>🧺 Quantity: {crop.quantity}</li>
+                    <li>🧺 Quantity: {crop.quantity}kg</li>
                     <li>💰 Price: {crop.price}</li>
-                    <li>👨‍🌾 Farmer: {crop.farmer}</li>
+                    <li>
+                      👨‍🌾 Farmer:{' '}
+                      <button
+                        className="btn btn-link p-0"
+                        onClick={() => navigate(`/farmer/${crop.farmerId}`)}
+                      >
+                        {crop.farmer || 'N/A'}
+                      </button>
+                    </li>
                   </ul>
                   <button
                     className="btn btn-sm btn-outline-warning w-100"

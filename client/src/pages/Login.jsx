@@ -22,15 +22,17 @@ const Login = () => {
       if (response.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('userRole', data.user.role);
-
+        localStorage.setItem('user', JSON.stringify(data.user)); // 👈 this was missing
+      
         // Navigate to dashboard
         if (data.user.role === 'farmer') navigate('/farmer-dashboard');
         else if (data.user.role === 'buyer') navigate('/buyer-dashboard');
         else if (data.user.role === 'admin') navigate('/admin-dashboard');
-
-        // Force App.js to re-render and show navbar
+      
+        // Optional: force refresh to update navbar
         setTimeout(() => window.location.reload(), 100);
-      } else {
+      }
+      else {
         alert(data.error || 'Login failed');
       }
     } catch (err) {

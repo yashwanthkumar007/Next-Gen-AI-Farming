@@ -54,6 +54,10 @@ app.use('/api/lcc', lccRoute);
 const soilHealthRoutes = require('./routes/soilHealthRoutes');
 app.use('/api/soil-health', soilHealthRoutes);
 
+//user routes for farmerprofile
+const userRoutes = require('./routes/userRoutes');
+app.use('/api/users', userRoutes);
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

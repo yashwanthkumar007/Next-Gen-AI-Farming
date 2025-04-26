@@ -14,6 +14,7 @@ import profile from './pages/UserProfile';
 import LeafColorChecker from "./pages/LeafColorChecker";
 import UserProfile from "./pages/UserProfile";
 import NavbarWithLogout from "./components/NavbarWithLogout";
+import FarmerPublicProfile from "./pages/FarmerPublicProfile";
 
 function App() {
   const token = localStorage.getItem('token'); // ✅ Check token
@@ -35,6 +36,8 @@ function App() {
         <Route path="/market-prices" element={<CropMarketPrices />} />
         <Route path="/soil-health" element={<SoilHealthForm />} />
         <Route path="/profile" element={<UserProfile />} />
+        <Route path="/farmer/:id" element={<FarmerPublicProfile />} />
+
       </Routes>
     </Router>
   );
