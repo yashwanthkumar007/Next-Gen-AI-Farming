@@ -4,9 +4,7 @@ import 'animate.css';
 import NavbarWithLogout from '../components/NavbarWithLogout';
 
 const CropListingForm = () => {
-  const user = JSON.parse(localStorage.getItem('user')); // Assuming user is stored on login
-  const farmerId = user?._id;
-  const farmerName = user?.name || 'Unknown';
+  const user = JSON.parse(localStorage.getItem('user')); // get user from localStorage
 
   const [formData, setFormData] = useState({
     name: '',
@@ -22,33 +20,32 @@ const CropListingForm = () => {
     }));
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormData({ name: '', quantity: '', price: '', location: '' });
 
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+    const cropData = {
+      ...formData,
+      farmer: user?.name || 'Unknown',
+      farmerId: user?.id || null,   // ✅ Corrected here!
+    };
 
-  const cropData = {
-    ...formData,
-    farmer: user?.name || 'Unknown',
-    farmerId: user?._id || null,  // 👈 ensure this is passed
+    try {
+      const res = await fetch('http://localhost:5000/api/crops/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cropData),
+      });
+
+      const data = await res.json();
+      console.log('✅ Submitted crop:', data);
+      alert('✅ Crop listed successfully!');
+    } catch (err) {
+      console.error('❌ Failed to submit crop:', err);
+      alert('❌ Failed to list crop');
+    }
   };
-
-  try {
-    const res = await fetch('http://localhost:5000/api/crops/add', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(cropData),
-    });
-
-    const data = await res.json();
-    console.log('✅ Submitted crop:', data);
-    alert('✅ Crop listed successfully!');
-  } catch (err) {
-    console.error('❌ Failed to submit crop:', err);
-    alert('❌ Failed to list crop');
-  }
-};
-
 
   return (
     <div className="bg-light min-vh-100 px-3 py-5 animate__animated animate__fadeIn">

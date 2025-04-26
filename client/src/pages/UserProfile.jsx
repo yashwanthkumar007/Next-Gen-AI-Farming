@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import NavbarWithLogout from '../components/NavbarWithLogout';
 import { useNavigate } from 'react-router-dom';
 
 const UserProfile = () => {
