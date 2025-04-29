@@ -47,6 +47,13 @@ const DashboardFarmer = () => {
             SoilHealth 
           </button>
 
+          <button
+      className="btn btn-outline-success btn-sm"
+      onClick={() => navigate('/farmer-crops')}
+    >
+      🌾 Manage My Crops
+    </button>
+
         </div>
       </div>
     </div>
