@@ -7,6 +7,8 @@ const FarmerMyCrops = () => {
   const [toastMessage, setToastMessage] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editCrop, setEditCrop] = useState({});
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [cropToDelete, setCropToDelete] = useState(null);
 
   const user = JSON.parse(localStorage.getItem('user'));
   const farmerId = user?.id;
@@ -33,20 +35,28 @@ const FarmerMyCrops = () => {
     setTimeout(() => setToastMessage(''), 2500);
   };
 
-  const handleDelete = async (cropId) => {
-    if (window.confirm('⚠️ Are you sure you want to delete this crop?')) {
-      try {
-        const res = await fetch(`http://localhost:5000/api/crops/${cropId}`, { method: 'DELETE' });
-        if (res.ok) {
-          showToast('✅ Crop deleted successfully');
-          fetchMyCrops();
-        } else {
-          alert('❌ Failed to delete crop');
-        }
-      } catch (err) {
-        console.error(err);
-        alert('❌ Error deleting crop');
+  const handleDelete = (cropId) => {
+    setCropToDelete(cropId);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteCrop = async () => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/crops/${cropToDelete}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        showToast('✅ Crop deleted successfully');
+        fetchMyCrops();
+      } else {
+        showToast('❌ Failed to delete crop');
       }
+    } catch (err) {
+      console.error(err);
+      showToast('❌ Error deleting crop');
+    } finally {
+      setShowDeleteModal(false);
+      setCropToDelete(null);
     }
   };
 
@@ -61,7 +71,7 @@ const FarmerMyCrops = () => {
 
   const handleModalSave = async () => {
     if (!editCrop.price || !editCrop.quantity) {
-      alert('❌ Both price and quantity are required.');
+      showToast('❌ Both price and quantity are required.');
       return;
     }
 
@@ -69,7 +79,10 @@ const FarmerMyCrops = () => {
       const res = await fetch(`http://localhost:5000/api/crops/${editCrop._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ price: editCrop.price, quantity: editCrop.quantity }),
+        body: JSON.stringify({
+          price: editCrop.price,
+          quantity: editCrop.quantity,
+        }),
       });
 
       if (res.ok) {
@@ -77,18 +90,18 @@ const FarmerMyCrops = () => {
         fetchMyCrops();
         setShowModal(false);
       } else {
-        alert('❌ Failed to update crop');
+        showToast('❌ Failed to update crop');
       }
     } catch (err) {
       console.error(err);
-      alert('❌ Error updating crop');
+      showToast('❌ Error updating crop');
     }
   };
 
   return (
     <div className="bg-light min-vh-100 px-3 py-5">
-      <NavbarWithLogout />
       <div className="container">
+        <NavbarWithLogout />
         <h3 className="text-success mb-4 text-center">🌾 My Crops</h3>
 
         {loading ? (
@@ -114,7 +127,7 @@ const FarmerMyCrops = () => {
                       className="btn btn-sm btn-outline-primary"
                       onClick={() => openEditModal(crop)}
                     >
-                      ✏️ Edit
+                      ✏️ Update
                     </button>
                     <button
                       className="btn btn-sm btn-outline-danger"
@@ -153,8 +166,12 @@ const FarmerMyCrops = () => {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">✏️ Edit Crop</h5>
-                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+                <h5 className="modal-title">✏️ Update Crop</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowModal(false)}
+                ></button>
               </div>
               <div className="modal-body">
                 <div className="mb-3">
@@ -184,6 +201,42 @@ const FarmerMyCrops = () => {
                 </button>
                 <button className="btn btn-primary" onClick={handleModalSave}>
                   Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div
+          className="modal fade show d-block"
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+          tabIndex="-1"
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title text-danger">🗑️ Confirm Delete</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowDeleteModal(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <p>Are you sure you want to delete this crop?</p>
+              </div>
+              <div className="modal-footer">
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setShowDeleteModal(false)}
+                >
+                  Cancel
+                </button>
+                <button className="btn btn-danger" onClick={confirmDeleteCrop}>
+                  Yes, Delete
                 </button>
               </div>
             </div>

@@ -41,8 +41,8 @@ router.get('/my-crops/:farmerId', async (req, res) => {
   }
 });
 
-// PATCH /api/crops/update/:cropId - Update quantity and price
-router.patch('/update/:cropId', async (req, res) => {
+// PUT /api/crops/:cropId - Update crop (price & quantity)
+router.put('/:cropId', async (req, res) => {
   try {
     const { quantity, price } = req.body;
 
@@ -58,13 +58,13 @@ router.patch('/update/:cropId', async (req, res) => {
 
     res.json({ message: 'Crop updated successfully', crop: updatedCrop });
   } catch (err) {
-    console.error('Update Crop Error:', err);
+    console.error('PUT Update Crop Error:', err);
     res.status(500).json({ error: 'Failed to update crop' });
   }
 });
 
 // DELETE /api/crops/delete/:cropId - Delete crop
-router.delete('/delete/:cropId', async (req, res) => {
+router.delete('/:cropId', async (req, res) => {
   try {
     const deletedCrop = await Crop.findByIdAndDelete(req.params.cropId);
 
