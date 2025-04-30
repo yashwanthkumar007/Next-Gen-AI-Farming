@@ -10,6 +10,10 @@ const DashboardBuyer = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedCrop, setSelectedCrop] = useState(null);
   const [interestQuantity, setInterestQuantity] = useState('');
+  const [locationFilter, setLocationFilter] = useState('');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  const [cropNameFilter, setCropNameFilter] = useState(''); // New state for crop name filter
 
   useEffect(() => {
     const fetchCrops = async () => {
@@ -49,7 +53,7 @@ const DashboardBuyer = () => {
         alert('✅ Interest submitted successfully!');
         setShowModal(false);
         setInterestQuantity('');
-        window.location.reload(); // Refresh crop list
+        window.location.reload();
       } else {
         alert(`❌ ${data.error}`);
       }
@@ -58,6 +62,16 @@ const DashboardBuyer = () => {
       alert('❌ Something went wrong. Try again.');
     }
   };
+
+  // Filtering crops based on name, location, and price range
+  const filteredCrops = crops.filter((crop) => {
+    const matchesName = crop.name.toLowerCase().includes(cropNameFilter.toLowerCase());
+    const matchesLocation = locationFilter === '' || crop.location.toLowerCase().includes(locationFilter.toLowerCase());
+    const cropPrice = parseFloat(crop.price);
+    const matchesMin = minPrice === '' || cropPrice >= parseFloat(minPrice);
+    const matchesMax = maxPrice === '' || cropPrice <= parseFloat(maxPrice);
+    return matchesName && matchesLocation && matchesMin && matchesMax;
+  });
 
   return (
     <div className="bg-light min-vh-100 px-3 py-5 animate__animated animate__fadeIn">
@@ -72,18 +86,59 @@ const DashboardBuyer = () => {
           </button>
         </div>
 
+        {/* Filters */}
+        <div className="row mb-4 align-items-center">
+          <div className="col-md-2">
+            <input
+              type="text"
+              className="form-control form-control-sm"
+              placeholder="Crop Name"
+              value={cropNameFilter}
+              onChange={(e) => setCropNameFilter(e.target.value)}
+            />
+          </div>
+          <div className="col-md-2">
+            <input
+              type="text"
+              className="form-control form-control-sm"
+              placeholder="Location"
+              value={locationFilter}
+              onChange={(e) => setLocationFilter(e.target.value)}
+            />
+          </div>
+          <div className="col-md-2">
+            <input
+              type="number"
+              className="form-control form-control-sm"
+              placeholder="Min. Price"
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value)}
+            />
+          </div>
+          <div className="col-md-2">
+            <input
+              type="number"
+              className="form-control form-control-sm"
+              placeholder="Max. Price"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+            />
+          </div>
+        </div>
+
+        {/* Crop Listings */}
         {loading ? (
           <div className="text-center mt-5">
             <div className="spinner-border text-warning" role="status" />
             <p className="text-muted mt-2">Loading crop listings...</p>
           </div>
-        ) : crops.length === 0 ? (
+        ) : filteredCrops.length === 0 ? (
           <div className="text-center mt-5 text-muted">
-            🚫 Market is currently unavailable.
+            🚫 No crops match your filter criteria.
           </div>
         ) : (
           <div className="row g-4">
-            {crops.map((crop, index) => (
+            {filteredCrops.map((crop, index) => (
               <div className="col-md-4" key={index}>
                 <div className="card shadow-sm border-0 p-3">
                   <h5 className="text-success">{crop.name}</h5>
@@ -92,7 +147,7 @@ const DashboardBuyer = () => {
                     <li>🧺 Quantity: {crop.quantity} kg</li>
                     <li>💰 Price: {crop.price}</li>
                     <li>
-                      👨‍🌾 Farmer: 
+                      👨‍🌾 Farmer:{' '}
                       <button
                         className="btn btn-link p-0"
                         onClick={() => navigate(`/farmer/${crop.farmerId}`)}
@@ -116,7 +171,7 @@ const DashboardBuyer = () => {
 
       {/* Modal for Express Interest */}
       {showModal && (
-        <div className="modal show fade d-block" tabIndex="-1">
+        <div className="modal show fade d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog">
             <div className="modal-content p-4">
               <h5 className="mb-3">Express Interest</h5>
