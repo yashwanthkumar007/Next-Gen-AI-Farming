@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'animate.css';
-import { useNavigate } from 'react-router-dom';
+import '../styles/DashboardBuyer.css';
+
 
 const DashboardBuyer = () => {
   const navigate = useNavigate();
@@ -13,7 +15,7 @@ const DashboardBuyer = () => {
   const [locationFilter, setLocationFilter] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
-  const [cropNameFilter, setCropNameFilter] = useState(''); // New state for crop name filter
+  const [cropNameFilter, setCropNameFilter] = useState('');
 
   useEffect(() => {
     const fetchCrops = async () => {
@@ -63,7 +65,6 @@ const DashboardBuyer = () => {
     }
   };
 
-  // Filtering crops based on name, location, and price range
   const filteredCrops = crops.filter((crop) => {
     const matchesName = crop.name.toLowerCase().includes(cropNameFilter.toLowerCase());
     const matchesLocation = locationFilter === '' || crop.location.toLowerCase().includes(locationFilter.toLowerCase());
@@ -74,7 +75,7 @@ const DashboardBuyer = () => {
   });
 
   return (
-    <div className="bg-light min-vh-100 px-3 py-5 animate__animated animate__fadeIn">
+    <div className="dashboard-container animate__animated animate__fadeIn">
       <div className="container">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h3 className="text-warning">🛒 Buyer Dashboard</h3>
@@ -86,8 +87,7 @@ const DashboardBuyer = () => {
           </button>
         </div>
 
-        {/* Filters */}
-        <div className="row mb-4 align-items-center">
+        <div className="row mb-4 align-items-center filter-row">
           <div className="col-md-2">
             <input
               type="text"
@@ -126,7 +126,6 @@ const DashboardBuyer = () => {
           </div>
         </div>
 
-        {/* Crop Listings */}
         {loading ? (
           <div className="text-center mt-5">
             <div className="spinner-border text-warning" role="status" />
@@ -140,9 +139,9 @@ const DashboardBuyer = () => {
           <div className="row g-4">
             {filteredCrops.map((crop, index) => (
               <div className="col-md-4" key={index}>
-                <div className="card shadow-sm border-0 p-3">
-                  <h5 className="text-success">{crop.name}</h5>
-                  <ul className="list-unstyled small text-muted mb-2">
+                <div className="card crop-card">
+                  <h5>{crop.name}</h5>
+                  <ul>
                     <li>📍 {crop.location}</li>
                     <li>🧺 Quantity: {crop.quantity} kg</li>
                     <li>💰 Price: {crop.price}</li>
@@ -169,9 +168,8 @@ const DashboardBuyer = () => {
         )}
       </div>
 
-      {/* Modal for Express Interest */}
       {showModal && (
-        <div className="modal show fade d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+        <div className="modal show fade d-block modal-backdrop-custom">
           <div className="modal-dialog">
             <div className="modal-content p-4">
               <h5 className="mb-3">Express Interest</h5>

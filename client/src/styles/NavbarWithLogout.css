@@ -1,0 +1,29 @@
+.navbar-custom {
+    background: linear-gradient(to right, #e6f4ea, #d0ebdd);
+    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid #c9e6d2;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    border-radius: 0 0 12px 12px;
+  }
+  
+  .navbar-custom .navbar-brand {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #2f855a; /* dark green */
+  }
+  
+  .navbar-custom .btn-logout {
+    background-color: transparent;
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    font-size: 0.85rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+  }
+  
+  .navbar-custom .btn-logout:hover {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  

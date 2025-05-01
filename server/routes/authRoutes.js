@@ -5,6 +5,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const protect = require('../middleware/authMiddleware');
 
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@farming.com';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+
+
 
 // ✅ Protected profile route
 router.get('/profile', protect, (req, res) => {
@@ -53,7 +57,21 @@ router.post('/login', async (req, res) => {
   if (!email || !password) {
     return res.status(400).json({ message: 'Please provide email and password' });
   }
-
+   // 1. Admin hardcoded check
+   if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+    const token = jwt.sign({ userId: 'admin', role: 'admin' }, jwtSecret, { expiresIn: '1d' });
+    return res.status(200).json({
+      message: 'Admin login successful',
+      token,
+      user: {
+        id: 'admin',
+        name: 'Admin',
+        email,
+        role: 'admin'
+      }
+    });
+  }
+  // 2. normal login
   try {
     const user = await User.findOne({ email });
     if (!user) {
