@@ -16,6 +16,8 @@ import UserProfile from "./pages/UserProfile";
 import NavbarWithLogout from "./components/NavbarWithLogout";
 import FarmerPublicProfile from "./pages/FarmerPublicProfile";
 import FarmerMyCrops from "./pages/FarmerMyCrops";
+import AdminUserList from "./pages/AdminUserList";
+import AdminCropList from "./pages/AdminCropList";
 
 function App() {
   const token = localStorage.getItem('token'); // ✅ Check token
@@ -39,6 +41,9 @@ function App() {
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/farmer/:id" element={<FarmerPublicProfile />} />
         <Route path="/farmer-crops" element={<FarmerMyCrops />} />
+        <Route path="/admin/users" element={<AdminUserList />} />
+        <Route path="/admin/crops" element={<AdminCropList />} />
+
       </Routes>
     </Router>
   );

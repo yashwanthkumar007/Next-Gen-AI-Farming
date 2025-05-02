@@ -17,8 +17,15 @@ const Login = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: username, password }),
       });
+      if (response.status === 403) {
+        const data = await response.json();
+        alert(data.message); // shows: "Your account has been deactivated by admin"
+        return;
+      }
+      
 
       const data = await response.json();
+      
       if (response.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('userRole', data.user.role);

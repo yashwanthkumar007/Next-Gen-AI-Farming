@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import LeafColorChecker from './LeafColorChecker';
+import axios from 'axios';
 
 
 const DashboardFarmer = () => {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles/NavbarWithLogout.css'; // Import CSS
 
 const NavbarWithLogout = () => {
   const navigate = useNavigate();
@@ -12,9 +13,9 @@ const NavbarWithLogout = () => {
   };
 
   return (
-    <nav className="navbar navbar-light bg-light px-4 mb-3 shadow-sm">
-      <span className="navbar-brand fw-bold">🌾 NextGen AI Farming</span>
-      <button className="btn btn-outline-danger btn-sm" onClick={handleLogout}>
+    <nav className="navbar navbar-custom d-flex justify-content-between align-items-center mb-3">
+      <span className="navbar-brand">🌾 NextGen AI Farming</span>
+      <button className="btn btn-logout" onClick={handleLogout}>
         Logout
       </button>
     </nav>
