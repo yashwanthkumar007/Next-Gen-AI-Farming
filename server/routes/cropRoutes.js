@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Crop = require('../models/Crop');
+const User=require('../models/User');
+
 
 // POST /api/crops/add - Add a new crop
 router.post('/add', async (req, res) => {
@@ -18,28 +20,43 @@ router.post('/add', async (req, res) => {
 });
 
 // GET /api/crops - Get all crops
+// GET /api/crops - Get all crops (only from active farmers)
 router.get('/', async (req, res) => {
   try {
-    const crops = await Crop.find().sort({ createdAt: -1 });
-    res.json(crops);
+    const crops = await Crop.find()
+      .populate('farmerId', 'isActive name') // fetch isActive from User
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const visibleCrops = crops.filter(crop => crop.farmerId?.isActive !== false);
+
+    res.json(visibleCrops);
   } catch (err) {
     console.error('Fetch Crops Error:', err);
     res.status(500).json({ error: 'Failed to fetch crops' });
   }
 });
 
-// GET /api/crops/my-crops/:farmerId - Get crops for a farmer
+
+// GET /api/crops/my-crops/:farmerId - Get crops for a farmer (only if active)
 router.get('/my-crops/:farmerId', async (req, res) => {
   try {
     const { farmerId } = req.params;
-    const crops = await Crop.find({ farmerId }).sort({ createdAt: -1 });
 
+    // Check if farmer is active
+    const farmer = await User.findById(farmerId);
+    if (!farmer || !farmer.isActive) {
+      return res.status(403).json({ error: 'This farmer account is deactivated' });
+    }
+
+    const crops = await Crop.find({ farmerId }).sort({ createdAt: -1 });
     res.json(crops);
   } catch (err) {
     console.error('Fetch My Crops Error:', err);
     res.status(500).json({ error: 'Failed to fetch farmer crops' });
   }
 });
+
 
 // PUT /api/crops/:cropId - Update crop (price & quantity)
 router.put('/:cropId', async (req, res) => {
@@ -64,7 +81,7 @@ router.put('/:cropId', async (req, res) => {
 });
 
 // DELETE /api/crops/delete/:cropId - Delete crop
-router.delete('/:cropId', async (req, res) => {
+router.delete('/delete/:cropId', async (req, res) => {
   try {
     const deletedCrop = await Crop.findByIdAndDelete(req.params.cropId);
 

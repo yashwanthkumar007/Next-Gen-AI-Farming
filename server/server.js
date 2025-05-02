@@ -62,6 +62,9 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 const userRoutes = require('./routes/userRoutes');
 app.use('/api/users', userRoutes);
 
+app.use('/api/admin', require('./routes/adminRoutes'));
+
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
