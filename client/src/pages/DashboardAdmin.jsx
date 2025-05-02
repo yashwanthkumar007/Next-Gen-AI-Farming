@@ -1,32 +1,51 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import 'animate.css';
+import { useNavigate } from 'react-router-dom';
 
 const DashboardAdmin = () => {
-  return (
-    <div style={{ background: '#f9f9fc', minHeight: '100vh' }}>
-      <div className="container py-5">
-   
+  const navigate = useNavigate();
 
-        <div className="text-center mb-4">
+  return (
+    <div style={{ background: '#f9f9fc', minHeight: '100vh' }} className="animate__animated animate__fadeIn">
+      <div className="container py-5">
+        <div className="text-center mb-5">
           <h2 className="text-primary">🧑‍💼 Admin Dashboard</h2>
-          <p>Manage users, market prices, and backend data</p>
+          <p className="text-muted">Monitor and control user activity, crop listings, and market intelligence.</p>
         </div>
 
-        <div className="row g-3">
-          <div className="col-md-6">
-            <div className="card shadow-sm p-4 border-0">
-              <h5>🧾 Manage Users</h5>
-              <p>View and update farmer, buyer, or admin roles</p>
-              <button className="btn btn-outline-primary w-100">Open</button>
+        <div className="row g-4">
+          {/* 1. User Management */}
+          <div className="col-md-4">
+            <div className="card border-0 shadow-sm h-100 p-4">
+              <h5 className="text-success">🧾 User Management</h5>
+              <p className="small text-muted">View, deactivate, or remove farmers and buyers.</p>
+              <button className="btn btn-outline-success mt-auto w-100" onClick={() => navigate('/admin/users')}
+              >
+                Manage Users
+              </button>
             </div>
           </div>
 
-          <div className="col-md-6">
-            <div className="card shadow-sm p-4 border-0">
-              <h5>📈 Market Price Control</h5>
-              <p>Edit or upload crop pricing data</p>
-              <button className="btn btn-outline-primary w-100">Manage</button>
+          {/* 2. Crop Listings Monitoring */}
+          <div className="col-md-4">
+            <div className="card border-0 shadow-sm h-100 p-4">
+              <h5 className="text-warning">🌿 Crop Listings</h5>
+              <p className="small text-muted">Review crop entries and delete invalid listings.</p>
+              <button className="btn btn-outline-warning mt-auto w-100" onClick={() => navigate('/admin/crops')}              >
+                View Crops
+              </button>
+            </div>
+          </div>
+
+          {/* 3. Market Oversight */}
+          <div className="col-md-4">
+            <div className="card border-0 shadow-sm h-100 p-4">
+              <h5 className="text-info">📊 Market Oversight</h5>
+              <p className="small text-muted">Check prices and sync with Agmarknet API.</p>
+              <button className="btn btn-outline-info mt-auto w-100">
+                Sync Market Data
+              </button>
             </div>
           </div>
         </div>

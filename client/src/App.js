@@ -18,6 +18,8 @@ import FarmerPublicProfile from "./pages/FarmerPublicProfile";
 import FarmerMyCrops from "./pages/FarmerMyCrops";
 import MarketData from "./pages/MarketData";
 import './styles/market.css';
+import AdminUserList from "./pages/AdminUserList";
+import AdminCropList from "./pages/AdminCropList";
 
 function App() {
   const token = localStorage.getItem('token'); // ✅ Check token
@@ -40,8 +42,15 @@ function App() {
         <Route path="/soil-health" element={<SoilHealthForm />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/farmer/:id" element={<FarmerPublicProfile />} />
+<<<<<<< HEAD
         <Route path="marketdata" element={<MarketData />} />
         <Route path="/farmer-crops" element={<FarmerMyCrops />} />
+=======
+        <Route path="/farmer-crops" element={<FarmerMyCrops />} />
+        <Route path="/admin/users" element={<AdminUserList />} />
+        <Route path="/admin/crops" element={<AdminCropList />} />
+
+>>>>>>> 3bd3713577296d03f4017f1b0d6d3a85ec0aaa6d
       </Routes>
     </Router>
   );

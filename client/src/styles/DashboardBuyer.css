@@ -1,0 +1,81 @@
+/* Page background and spacing */
+.dashboard-container {
+  background: linear-gradient(to bottom, #fefefe, #e7f7ee);
+  min-height: 100vh;
+  padding: 3rem 1.5rem;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Filter input row */
+.filter-row input {
+  font-size: 0.85rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease;
+}
+
+.filter-row input:focus {
+  border-color: #198754;
+  box-shadow: 0 0 0 0.1rem rgba(25, 135, 84, 0.25);
+}
+
+/* Crop cards */
+.crop-card {
+  padding: 1.25rem;
+  border-radius: 14px;
+  border: none;
+  background: #ffffff;
+  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.crop-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.07);
+}
+
+.crop-card h5 {
+  color: #198754;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.crop-card ul {
+  margin: 0;
+  padding: 0;
+  font-size: 0.88rem;
+  color: #555;
+  line-height: 1.6;
+  list-style: none;
+}
+
+.crop-card button.btn-outline-warning {
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Profile Button */
+.btn-outline-primary.btn-sm {
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 0.85rem;
+}
+
+/* Modal backdrop and content */
+.modal-backdrop-custom {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  border-radius: 12px;
+  background: #fefefe;
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content input {
+  border-radius: 6px;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}

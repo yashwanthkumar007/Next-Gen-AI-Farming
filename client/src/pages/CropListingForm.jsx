@@ -49,11 +49,8 @@ const CropListingForm = () => {
 
   return (
     <div className="bg-light min-vh-100 px-3 py-5 animate__animated animate__fadeIn">
-<<<<<<< HEAD
       <NavbarWithLogout />
-=======
-      
->>>>>>> 80d1d74b (market data)
+
       <div className="container">
         <div className="card shadow p-4 mx-auto" style={{ maxWidth: 550 }}>
           <h3 className="text-success text-center mb-3">🌾 List a Crop for Sale</h3>
