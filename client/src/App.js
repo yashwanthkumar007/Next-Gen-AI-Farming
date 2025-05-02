@@ -42,15 +42,13 @@ function App() {
         <Route path="/soil-health" element={<SoilHealthForm />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/farmer/:id" element={<FarmerPublicProfile />} />
-<<<<<<< HEAD
         <Route path="marketdata" element={<MarketData />} />
         <Route path="/farmer-crops" element={<FarmerMyCrops />} />
-=======
         <Route path="/farmer-crops" element={<FarmerMyCrops />} />
         <Route path="/admin/users" element={<AdminUserList />} />
         <Route path="/admin/crops" element={<AdminCropList />} />
 
->>>>>>> 3bd3713577296d03f4017f1b0d6d3a85ec0aaa6d
+
       </Routes>
     </Router>
   );
