@@ -4,6 +4,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const cron = require("node-cron");
 const fetchMarketPrices = require("./jobs/fetchMarketPrices");
+const priceRoutes = require('./routes/priceRoutes');
 
 const app = express(); // Moved up here
 
@@ -54,6 +55,8 @@ app.use('/api/lcc', lccRoute);
 const soilHealthRoutes = require('./routes/soilHealthRoutes');
 app.use('/api/soil-health', soilHealthRoutes);
 
+//price
+app.use('/api/prices', priceRoutes);
 
 //adminRoutes
 app.use('/api/admin', require('./routes/adminRoutes'));
