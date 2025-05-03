@@ -35,7 +35,7 @@ const DashboardFarmer = () => {
           + List New Crop
           </button>
 
-          <button className="btn btn-outline-secondary w-100" onClick={() => navigate(' marketdata')}> 80d1d74b (market data)
+          <button className="btn btn-outline-secondary w-100">
             View Crop Market (Coming Soon)
           </button>
           
@@ -46,15 +46,13 @@ const DashboardFarmer = () => {
           <button className="btn btn-outline-success w-100 mb-3" onClick={() =>navigate('/soil-health')}>
             SoilHealth 
           </button>
-          <button className="btn btn-outline-success w-100 mb-3" onClick={() =>navigate('/farmer-crops')}>
-          🌾 Manage My Crops
-          </button>
-          <button className="btn btn-outline-success w-100 mb-3" onClick={() => navigate('/farmer-crops')}>
-         🌾 Manage My Crops
-          </button>
-          <button className="btn btn-outline-success w-100 mb-3" onClick={() => navigate('/price-market')}>
-         🌾 Market Prices
-          </button>
+
+          <button
+      className="btn btn-outline-success btn-sm"
+      onClick={() => navigate('/farmer-crops')}
+    >
+      🌾 Manage My Crops
+    </button>
 
         </div>
       </div>
