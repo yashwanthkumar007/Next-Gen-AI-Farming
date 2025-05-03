@@ -49,13 +49,12 @@ const DashboardFarmer = () => {
           <button className="btn btn-outline-success w-100 mb-3" onClick={() =>navigate('/farmer-crops')}>
           🌾 Manage My Crops
           </button>
-          <button
-      className="btn btn-outline-success btn-sm"
-      onClick={() => navigate('/farmer-crops')}
-    >
-      🌾 Manage My Crops
-    </button>
-
+          <button className="btn btn-outline-success w-100 mb-3" onClick={() => navigate('/farmer-crops')}>
+         🌾 Manage My Crops
+          </button>
+          <button className="btn btn-outline-success w-100 mb-3" onClick={() => navigate('/price-market')}>
+         🌾 Market Prices
+          </button>
 
         </div>
       </div>

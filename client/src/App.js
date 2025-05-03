@@ -20,6 +20,7 @@ import MarketData from "./pages/MarketData";
 import './styles/market.css';
 import AdminUserList from "./pages/AdminUserList";
 import AdminCropList from "./pages/AdminCropList";
+import MarketPriceViewer from './pages/MarketPriceViewer';
 
 function App() {
   const token = localStorage.getItem('token'); // ✅ Check token
@@ -47,7 +48,7 @@ function App() {
         <Route path="/farmer-crops" element={<FarmerMyCrops />} />
         <Route path="/admin/users" element={<AdminUserList />} />
         <Route path="/admin/crops" element={<AdminCropList />} />
-
+        <Route path="/price-market" element={<MarketPriceViewer />} />
 
       </Routes>
     </Router>
