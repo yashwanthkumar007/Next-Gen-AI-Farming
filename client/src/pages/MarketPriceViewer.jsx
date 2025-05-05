@@ -1,99 +1,76 @@
-import React, { useState, useEffect } from 'react';
-import StateDistrictSelector from '../components/StateDistrictSelector';
+import React, { useState } from 'react'
+import StateDistrictSelector from '../components/StateDistrictSelector'
 
 const MarketPriceViewer = () => {
-  const [selectedState, setSelectedState] = useState('');
-  const [selectedDistrict, setSelectedDistrict] = useState('');
-  const [commodity, setCommodity] = useState('');
-  const [prices, setPrices] = useState([]);
-  const [market, setMarket] = useState('');
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [marketData, setMarketData] = useState([]);
+  const [selectedState, setSelectedState] = useState('')
+  const [selectedDistrict, setSelectedDistrict] = useState('')
+  const [commodity, setCommodity] = useState('')
+  const [prices, setPrices] = useState([])
+  const [market, setMarket] = useState('')
+  const [fromDate, setFromDate] = useState('')
+  const [toDate, setToDate] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const today = new Date();
-  const todayString = today.toISOString().split('T')[0];
-
-  // Fetch market prices data on component mount
-  useEffect(() => {
-    const fetchMarketData = async () => {
-      setLoading(true);
-      setError('');
-      try {
-        const response = await fetch('/data/marketPrices.json');
-        if (!response.ok) {
-          throw new Error('Failed to fetch market prices data');
-        }
-        const data = await response.json();
-        setMarketData(data);
-      } catch (err) {
-        setError('Failed to load market price data.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMarketData();
-  }, []);
+  const today = new Date()
+  const todayString = today.toISOString().split('T')[0]
 
   const handleFromDateChange = (event) => {
-    const selectedFromDate = event.target.value;
-    setFromDate(selectedFromDate);
+    const selectedFromDate = event.target.value
+    setFromDate(selectedFromDate)
     setToDate((prevToDate) =>
       prevToDate && prevToDate < selectedFromDate ? selectedFromDate : prevToDate
-    );
-  };
+    )
+  }
 
   const handleToDateChange = (event) => {
-    setToDate(event.target.value);
-  };
+    setToDate(event.target.value)
+  }
 
-  const fetchPrices = () => {
+  const fetchPrices = async () => {
     if (!selectedState || !selectedDistrict || !commodity || !fromDate || !toDate) {
-      alert('Please fill all fields');
-      return;
+      alert('Please fill all fields')
+      return
     }
     if (new Date(fromDate) > new Date(toDate)) {
-      alert('From Date cannot be later than To Date');
-      return;
+      alert('From Date cannot be later than To Date')
+      return
     }
 
-    setLoading(true);
-    setError('');
-    setPrices([]);
+    setLoading(true)
+    setError('')
+    setPrices([])
 
     try {
-      const formatDate = (dateStr) => {
-        const [year, month, day] = dateStr.split('-');
-        return `${day}-${month}-${year}`;
-      };
-
-      const formattedFromDate = formatDate(fromDate);
-      const formattedToDate = formatDate(toDate);
+      const response = await fetch('/data/marketPrices.json')
+      const marketData = await response.json()
 
       const results = marketData.filter((item) => {
-        return (
-          item.state === selectedState &&
-          item.district === selectedDistrict &&
-          item.commodity.toLowerCase() === commodity.toLowerCase() &&
-          item.date >= formattedFromDate &&
-          item.date <= formattedToDate
-        );
-      });
+        const [d, m, y] = item.date.split('-')
+        const itemDate = new Date(`${y}-${m}-${d}`)
+        const from = new Date(fromDate)
+        const to = new Date(toDate)
 
-      setPrices(results);
+        return (
+          item.state.toLowerCase() === selectedState.toLowerCase() &&
+          item.district.toLowerCase() === selectedDistrict.toLowerCase() &&
+          item.commodity.toLowerCase() === commodity.toLowerCase() &&
+          itemDate >= from &&
+          itemDate <= to
+        )
+      })
+
+      setPrices(results)
       if (results.length === 0) {
-        alert('No data found for the given parameters.');
+        alert('No data found for the given parameters.')
       }
     } catch (err) {
-      console.error('Error processing data:', err);
-      setError('Failed to load market price data.');
+      console.error('Error loading JSON:', err)
+      setError('Failed to load market price data.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="container mt-5">
@@ -155,11 +132,7 @@ const MarketPriceViewer = () => {
               <th>Market</th>
               <th>Commodity</th>
               <th>₹/quintal</th>
-              <th>₹/kg</th>
               <th>Arrival (tonnes)</th>
-              <th>Variation ₹/quintal</th>
-              <th>Variation ₹/kg</th>
-              <th>Variation Arrival (tonnes)</th>
             </tr>
           </thead>
           <tbody>
@@ -169,18 +142,14 @@ const MarketPriceViewer = () => {
                 <td>{row.market}</td>
                 <td>{row.commodity}</td>
                 <td>{row.price_per_quintal}</td>
-                <td>{row.price_per_kg}</td>
                 <td>{row.arrival_tonnes}</td>
-                <td>{row.price_per_quintal_variation}</td>
-                <td>{row.price_per_kg_variation}</td>
-                <td>{row.arrival_tonnes_variation}</td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default MarketPriceViewer;
+export default MarketPriceViewer
