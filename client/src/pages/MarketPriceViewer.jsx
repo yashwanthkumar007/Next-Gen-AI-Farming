@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import StateDistrictSelector from '../components/StateDistrictSelector';
-import axios from 'axios';
 
 const MarketPriceViewer = () => {
   const [selectedState, setSelectedState] = useState('');
@@ -12,15 +11,36 @@ const MarketPriceViewer = () => {
   const [toDate, setToDate] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [marketData, setMarketData] = useState([]);
 
-  // Get the current date formatted as YYYY-MM-DD
   const today = new Date();
   const todayString = today.toISOString().split('T')[0];
+
+  // Fetch market prices data on component mount
+  useEffect(() => {
+    const fetchMarketData = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const response = await fetch('/data/marketPrices.json');
+        if (!response.ok) {
+          throw new Error('Failed to fetch market prices data');
+        }
+        const data = await response.json();
+        setMarketData(data);
+      } catch (err) {
+        setError('Failed to load market price data.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMarketData();
+  }, []);
 
   const handleFromDateChange = (event) => {
     const selectedFromDate = event.target.value;
     setFromDate(selectedFromDate);
-    // Set the minimum "To Date" to the selected "From Date"
     setToDate((prevToDate) =>
       prevToDate && prevToDate < selectedFromDate ? selectedFromDate : prevToDate
     );
@@ -30,40 +50,46 @@ const MarketPriceViewer = () => {
     setToDate(event.target.value);
   };
 
-  const fetchPrices = async () => {
-    // Ensure all fields are filled
+  const fetchPrices = () => {
     if (!selectedState || !selectedDistrict || !commodity || !fromDate || !toDate) {
       alert('Please fill all fields');
       return;
     }
-    // Check that From Date is not later than To Date
     if (new Date(fromDate) > new Date(toDate)) {
       alert('From Date cannot be later than To Date');
       return;
     }
 
-    console.log('Fetching prices with the following parameters:');
-    console.log('State:', selectedState);
-    console.log('District:', selectedDistrict);
-    console.log('Commodity:', commodity);
-    console.log('From Date:', fromDate);
-    console.log('To Date:', toDate);
-
     setLoading(true);
     setError('');
+    setPrices([]);
 
     try {
-      const res = await axios.get('http://localhost:5000/api/prices/filter', {
-        params: { state: selectedState, district: selectedDistrict, commodity, fromDate, toDate },
+      const formatDate = (dateStr) => {
+        const [year, month, day] = dateStr.split('-');
+        return `${day}-${month}-${year}`;
+      };
+
+      const formattedFromDate = formatDate(fromDate);
+      const formattedToDate = formatDate(toDate);
+
+      const results = marketData.filter((item) => {
+        return (
+          item.state === selectedState &&
+          item.district === selectedDistrict &&
+          item.commodity.toLowerCase() === commodity.toLowerCase() &&
+          item.date >= formattedFromDate &&
+          item.date <= formattedToDate
+        );
       });
-      console.log('API Response:', res.data); // Log the API response
-      setPrices(res.data);
-      if (res.data.length === 0) {
+
+      setPrices(results);
+      if (results.length === 0) {
         alert('No data found for the given parameters.');
       }
     } catch (err) {
-      console.error('Error fetching prices:', err);
-      setError('Failed to fetch prices, please try again later.');
+      console.error('Error processing data:', err);
+      setError('Failed to load market price data.');
     } finally {
       setLoading(false);
     }
@@ -98,7 +124,7 @@ const MarketPriceViewer = () => {
           type="date"
           value={fromDate}
           onChange={handleFromDateChange}
-          max={todayString} // "From Date" limited to today
+          max={todayString}
           className="form-control"
         />
       </div>
@@ -109,8 +135,8 @@ const MarketPriceViewer = () => {
           type="date"
           value={toDate}
           onChange={handleToDateChange}
-          min={fromDate} // "To Date" cannot be earlier than "From Date"
-          max={todayString} // "To Date" limited to today
+          min={fromDate}
+          max={todayString}
           className="form-control"
         />
       </div>
@@ -129,30 +155,27 @@ const MarketPriceViewer = () => {
               <th>Market</th>
               <th>Commodity</th>
               <th>₹/quintal</th>
+              <th>₹/kg</th>
               <th>Arrival (tonnes)</th>
+              <th>Variation ₹/quintal</th>
+              <th>Variation ₹/kg</th>
+              <th>Variation Arrival (tonnes)</th>
             </tr>
           </thead>
           <tbody>
-            {prices.map((row, index) => {
-              // Convert date from DD-MM-YYYY (if applicable) to YYYY-MM-DD
-              let formattedDate = row.date;
-              if (formattedDate && formattedDate.includes('-')) {
-                const parts = formattedDate.split('-');
-                // Check if the last part is a 4-digit year; if so, it means the date is in DD-MM-YYYY format.
-                if (parts[2]?.length === 4) {
-                  formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-                }
-              }
-              return (
-                <tr key={index}>
-                  <td>{formattedDate}</td>
-                  <td>{row.market}</td>
-                  <td>{row.commodity}</td>
-                  <td>{row.price_per_quintal}</td>
-                  <td>{row.arrival_tonnes}</td>
-                </tr>
-              );
-            })}
+            {prices.map((row, index) => (
+              <tr key={index}>
+                <td>{row.date}</td>
+                <td>{row.market}</td>
+                <td>{row.commodity}</td>
+                <td>{row.price_per_quintal}</td>
+                <td>{row.price_per_kg}</td>
+                <td>{row.arrival_tonnes}</td>
+                <td>{row.price_per_quintal_variation}</td>
+                <td>{row.price_per_kg_variation}</td>
+                <td>{row.arrival_tonnes_variation}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       )}
