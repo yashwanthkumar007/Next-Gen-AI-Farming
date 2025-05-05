@@ -42,7 +42,7 @@ const FarmerMyCrops = () => {
 
   const confirmDeleteCrop = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/crops/${cropToDelete}`, {
+      const res = await fetch(`http://localhost:5000/api/crops/delete/${cropToDelete}`, {
         method: 'DELETE',
       });
       if (res.ok) {
