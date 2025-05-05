@@ -152,4 +152,6 @@ const MarketPriceViewer = () => {
   )
 }
 
+// secondmain
 export default MarketPriceViewer
+
