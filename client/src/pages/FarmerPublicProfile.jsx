@@ -24,7 +24,7 @@ const FarmerPublicProfile = () => {
 
   return (
     <div className="bg-light min-vh-100 px-3 py-5 animate__animated animate__fadeIn">
-      <NavbarWithLogout />
+      
       <div className="container">
         <h3 className="text-center text-success mb-4">👨‍🌾 Farmer Profile</h3>
         {error ? (

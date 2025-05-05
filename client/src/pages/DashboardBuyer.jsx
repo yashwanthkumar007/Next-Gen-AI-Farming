@@ -149,7 +149,7 @@ const DashboardBuyer = () => {
                       👨‍🌾 Farmer:{' '}
                       <button
                         className="btn btn-link p-0"
-                        onClick={() => navigate(`/farmer/${crop.farmerId}`)}
+                        onClick={() => navigate(`/farmer/${crop.farmerId._id}`)}
                       >
                         {crop.farmer || 'Unknown'}
                       </button>
