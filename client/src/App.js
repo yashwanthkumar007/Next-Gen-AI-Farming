@@ -10,7 +10,6 @@ import CropListingForm from "./pages/CropListingForm";
 import CropMarketPrices from "./pages/CropMarketPrices";
 import Register from './pages/Register';
 import SoilHealthForm from './pages/SoilHealthForm';
-import profile from './pages/UserProfile';
 import LeafColorChecker from "./pages/LeafColorChecker";
 import UserProfile from "./pages/UserProfile";
 import NavbarWithLogout from "./components/NavbarWithLogout";
@@ -45,11 +44,10 @@ function App() {
         <Route path="/farmer/:id" element={<FarmerPublicProfile />} />
         <Route path="marketdata" element={<MarketData />} />
         <Route path="/farmer-crops" element={<FarmerMyCrops />} />
-        <Route path="/farmer-crops" element={<FarmerMyCrops />} />
         <Route path="/admin/users" element={<AdminUserList />} />
         <Route path="/admin/crops" element={<AdminCropList />} />
         <Route path="/price-market" element={<MarketPriceViewer />} />
-
+        <Route path="/admin/pricedata" element={<MarketPriceViewer />} />
       </Routes>
     </Router>
   );
