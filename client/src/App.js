@@ -20,6 +20,9 @@ import './styles/market.css';
 import AdminUserList from "./pages/AdminUserList";
 import AdminCropList from "./pages/AdminCropList";
 import MarketPriceViewer from './pages/MarketPriceViewer';
+import Unauthorized from "./pages/Unauthorized";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 
 function App() {
   const token = localStorage.getItem('token'); // ✅ Check token
@@ -29,27 +32,111 @@ function App() {
       {token && <NavbarWithLogout />} {/* ✅ Only show if logged in */}
       
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/recommend" element={<RecommendForm />} />
-        <Route path="/farmer-dashboard" element={<DashboardFarmer />} />
-        <Route path="/admin-dashboard" element={<DashboardAdmin />} />
-        <Route path="/buyer-dashboard" element={<DashboardBuyer />} />
-        <Route path="/market" element={<CropMarket />} />
-        <Route path="/list-crop" element={<CropListingForm />} />
-        <Route path="/leaf-color-checker" element={<LeafColorChecker />} />
-        <Route path="/market-prices" element={<CropMarketPrices />} />
-        <Route path="/soil-health" element={<SoilHealthForm />} />
-        <Route path="/profile" element={<UserProfile />} />
-        <Route path="/farmer/:id" element={<FarmerPublicProfile />} />
-        <Route path="marketdata" element={<MarketData />} />
-        <Route path="/farmer-crops" element={<FarmerMyCrops />} />
-        <Route path="/admin/users" element={<AdminUserList />} />
-        <Route path="/admin/crops" element={<AdminCropList />} />
-        <Route path="/price-market" element={<MarketPriceViewer />} />
-        <Route path="/admin/pricedata" element={<MarketPriceViewer />} />
-      </Routes>
-    </Router>
+    {/* Public Routes */}
+    <Route path="/" element={<Login />} />
+    <Route path="/register" element={<Register />} />
+    <Route path="/unauthorized" element={<Unauthorized />} />
+
+    {/* Protected Routes by Role */}
+    <Route path="/farmer-dashboard" element={
+      <ProtectedRoute allowedRoles={['farmer']}>
+        <DashboardFarmer />
+      </ProtectedRoute>
+    } />
+
+    <Route path="/admin-dashboard" element={
+      <ProtectedRoute allowedRoles={['admin']}>
+        <DashboardAdmin />
+      </ProtectedRoute>
+    } />
+
+    <Route path="/buyer-dashboard" element={
+      <ProtectedRoute allowedRoles={['buyer']}>
+        <DashboardBuyer />
+      </ProtectedRoute>
+    } />
+
+    {/* Farmer-only Pages */}
+    <Route path="/market" element={
+      <ProtectedRoute allowedRoles={['farmer']}>
+        <CropMarket />
+      </ProtectedRoute>
+    } />
+    <Route path="/list-crop" element={
+      <ProtectedRoute allowedRoles={['farmer']}>
+        <CropListingForm />
+      </ProtectedRoute>
+    } />
+    <Route path="/leaf-color-checker" element={
+      <ProtectedRoute allowedRoles={['farmer']}>
+        <LeafColorChecker />
+      </ProtectedRoute>
+    } />
+    <Route path="/market-prices" element={
+      <ProtectedRoute allowedRoles={['farmer']}>
+        <CropMarketPrices />
+      </ProtectedRoute>
+    } />
+    <Route path="/soil-health" element={
+      <ProtectedRoute allowedRoles={['farmer']}>
+        <SoilHealthForm />
+      </ProtectedRoute>
+    } />
+    <Route path="/profile" element={
+      <ProtectedRoute allowedRoles={['farmer', 'buyer']}>
+        <UserProfile />
+      </ProtectedRoute>
+    } />
+    <Route path="/farmer-crops" element={
+      <ProtectedRoute allowedRoles={['farmer']}>
+        <FarmerMyCrops />
+      </ProtectedRoute>
+    } />
+
+    {/* Shared Route: View Public Profile */}
+    <Route path="/farmer/:id" element={
+      <ProtectedRoute allowedRoles={['buyer']}>
+        <FarmerPublicProfile />
+      </ProtectedRoute>
+    } />
+
+    {/* Shared: Recommend AI */}
+    <Route path="/recommend" element={
+      <ProtectedRoute allowedRoles={['farmer']}>
+        <RecommendForm />
+      </ProtectedRoute>
+    } />
+
+    <Route path="/marketdata" element={
+      <ProtectedRoute allowedRoles={['farmer']}>
+        <MarketData />
+      </ProtectedRoute>
+    } />
+
+    {/* Admin-Only Pages */}
+    <Route path="/admin/users" element={
+      <ProtectedRoute allowedRoles={['admin']}>
+        <AdminUserList />
+      </ProtectedRoute>
+    } />
+    <Route path="/admin/crops" element={
+      <ProtectedRoute allowedRoles={['admin']}>
+        <AdminCropList />
+      </ProtectedRoute>
+    } />
+    <Route path="/admin/pricedata" element={
+      <ProtectedRoute allowedRoles={['admin']}>
+        <MarketPriceViewer />
+      </ProtectedRoute>
+    } />
+    <Route path="/price-market" element={
+      <ProtectedRoute allowedRoles={['farmer']}>
+        <MarketPriceViewer />
+      </ProtectedRoute>
+    } />
+  </Routes>
+</Router>
+
   );
 }
 
