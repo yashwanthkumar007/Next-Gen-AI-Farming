@@ -7,16 +7,14 @@ const protect = require('../middleware/authMiddleware');
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@farming.com';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+const jwtSecret = process.env.JWT_SECRET || 'mydefaultsecret';
 
-
-
-// ✅ Protected profile route
+// ✅ Protected route to get logged-in user profile
 router.get('/profile', protect, (req, res) => {
-    res.status(200).json(req.user);
-  });
+  res.status(200).json(req.user);
+});
 
-  
-// 🔐 Register route (farmer or buyer)
+// ✅ Register a new user (farmer or buyer)
 router.post('/register', async (req, res) => {
   const { name, email, password, role } = req.body;
 
@@ -40,7 +38,6 @@ router.post('/register', async (req, res) => {
     });
 
     await newUser.save();
-
     res.status(201).json({ message: 'Registration successful' });
   } catch (err) {
     console.error('Register error:', err.message);
@@ -48,17 +45,16 @@ router.post('/register', async (req, res) => {
   }
 });
 
-const jwtSecret = process.env.JWT_SECRET || 'mydefaultsecret'; // ideally store in .env
-
-// 🔐 Login route
+// ✅ Login Route
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, role } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ message: 'Please provide email and password' });
+  if (!email || !password || !role) {
+    return res.status(400).json({ message: 'Please provide email, password, and role' });
   }
-   // 1. Admin hardcoded check
-   if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+
+  // 1️⃣ Admin login (hardcoded)
+  if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD && role === 'admin') {
     const token = jwt.sign({ userId: 'admin', role: 'admin' }, jwtSecret, { expiresIn: '1d' });
     return res.status(200).json({
       message: 'Admin login successful',
@@ -71,22 +67,22 @@ router.post('/login', async (req, res) => {
       }
     });
   }
-  // 2. normal login
+
+  // 2️⃣ Regular user login
   try {
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
     if (!user.isActive) {
-  return res.status(403).json({ message: 'Your account has been deactivated by admin' });
-}
+      return res.status(403).json({ message: 'Your account has been deactivated by admin' });
+    }
 
-    // Create JWT token
+    if (user.role !== role) {
+      return res.status(403).json({ message: `You are registered as a ${user.role}, not a ${role}` });
+    }
+
     const token = jwt.sign(
       { userId: user._id, role: user.role },
       jwtSecret,
