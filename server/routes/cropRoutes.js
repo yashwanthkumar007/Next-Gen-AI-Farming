@@ -2,6 +2,13 @@ const express = require('express');
 const router = express.Router();
 const Crop = require('../models/Crop');
 const User=require('../models/User');
+const Payment = require('../models/Payment');
+const Razorpay = require('razorpay');
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_SECRET
+});
 
 
 // POST /api/crops/add - Add a new crop
@@ -96,37 +103,67 @@ router.delete('/delete/:cropId', async (req, res) => {
   }
 });
 
-// POST /api/crops/express-interest - Buyer buys quantity
+// POST /api/crops/express-interest
 router.post('/express-interest', async (req, res) => {
   try {
-    const { cropId, buyQuantity } = req.body;
+    const { cropId, buyQuantity, buyerId } = req.body;
 
-    if (!cropId || !buyQuantity) {
-      return res.status(400).json({ error: 'Missing cropId or buyQuantity' });
+    if (!cropId || !buyQuantity || !buyerId) {
+      return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    const crop = await Crop.findById(cropId);
-    if (!crop) {
-      return res.status(404).json({ error: 'Crop not found' });
-    }
+    const crop = await Crop.findById(cropId).populate('farmerId');
+    if (!crop) return res.status(404).json({ error: 'Crop not found' });
+    if (!crop.farmerId?.razorpayAccountId) return res.status(400).json({ error: 'Farmer has no Razorpay account' });
+    if (crop.quantity < buyQuantity) return res.status(400).json({ error: 'Insufficient stock' });
 
-    if (crop.quantity < buyQuantity) {
-      return res.status(400).json({ error: 'Not enough stock available' });
-    }
+    const amount = crop.price * buyQuantity * 100; // in paise
 
+    // Simulate order creation
+    const payment = await razorpay.orders.create({
+      amount,
+      currency: 'INR',
+      receipt: `rcpt_crop_${cropId}_${Date.now()}`,
+      notes: {
+        crop: crop.name,
+        buyerId
+      },
+      transfers: [
+        {
+          account: crop.farmerId.razorpayAccountId,
+          amount,
+          currency: 'INR',
+          notes: { cropId, buyerId }
+        }
+      ]
+    });
+
+    // Log to DB
+    await Payment.create({
+      buyerId,
+      farmerId: crop.farmerId._id,
+      cropId,
+      amount: amount / 100,
+      quantity: buyQuantity,
+      razorpayPaymentId: payment.id,
+      status: 'success'
+    });
+
+    // Update crop quantity
     crop.quantity -= buyQuantity;
-
     if (crop.quantity <= 0) {
-      await Crop.findByIdAndDelete(cropId);
+      await crop.deleteOne();
       return res.json({ message: 'Crop sold out and removed from market!' });
     } else {
       await crop.save();
-      return res.json({ message: 'Interest submitted successfully', updatedCrop: crop });
     }
+
+    res.json({ message: 'Interest and payment successful', paymentId: payment.id });
   } catch (err) {
-    console.error('Express Interest Error:', err);
-    res.status(500).json({ error: 'Failed to process interest' });
+    console.error('Payment error:', err);
+    res.status(500).json({ error: 'Failed to process interest/payment' });
   }
 });
+
 
 module.exports = router;

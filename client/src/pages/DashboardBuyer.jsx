@@ -4,9 +4,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'animate.css';
 import '../styles/DashboardBuyer.css';
 
-
 const DashboardBuyer = () => {
   const navigate = useNavigate();
+  const [paying, setPaying] = useState(false);
   const [crops, setCrops] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -42,26 +42,44 @@ const DashboardBuyer = () => {
   const handleSubmitInterest = async () => {
     if (!selectedCrop || !interestQuantity) return;
 
+    const quantity = parseInt(interestQuantity);
+    const amount = quantity * parseFloat(selectedCrop.price);
+
+    if (quantity <= 0) {
+      alert('Please enter a valid quantity');
+      return;
+    }
+
+    const confirm = window.confirm(`Confirm to pay ₹${amount} to ${selectedCrop.farmer}?`);
+    if (!confirm) return;
+
+    setPaying(true);
+
     try {
-      const res = await fetch('http://localhost:5000/api/crops/express-interest', {
+      const res = await fetch('http://localhost:5000/api/payment/process', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cropId: selectedCrop._id, buyQuantity: parseInt(interestQuantity) })
+        body: JSON.stringify({
+          cropId: selectedCrop._id,
+          quantity,
+          amount,
+        }),
       });
 
       const data = await res.json();
-
-      if (res.ok) {
-        alert('✅ Interest submitted successfully!');
-        setShowModal(false);
-        setInterestQuantity('');
-        window.location.reload();
-      } else {
+     if (res.ok) {
+  const buyer = JSON.parse(localStorage.getItem('user'));
+  setShowModal(false);
+  navigate(`/payment/${selectedCrop._id}?quantity=${interestQuantity}&buyerId=${buyer.id}`);
+}
+ else {
         alert(`❌ ${data.error}`);
       }
     } catch (err) {
-      console.error('❌ Error submitting interest:', err);
-      alert('❌ Something went wrong. Try again.');
+      console.error('Payment error:', err);
+      alert('❌ Something went wrong');
+    } finally {
+      setPaying(false);
     }
   };
 
@@ -79,10 +97,7 @@ const DashboardBuyer = () => {
       <div className="container">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h3 className="text-warning">🛒 Buyer Dashboard</h3>
-          <button
-            className="btn btn-outline-primary btn-sm"
-            onClick={() => navigate('/profile')}
-          >
+          <button className="btn btn-outline-primary btn-sm" onClick={() => navigate('/profile')}>
             👤 My Profile
           </button>
         </div>
@@ -144,7 +159,7 @@ const DashboardBuyer = () => {
                   <ul>
                     <li>📍 {crop.location}</li>
                     <li>🧺 Quantity: {crop.quantity} kg</li>
-                    <li>💰 Price: {crop.price}</li>
+                    <li>💰 Price: ₹{crop.price}</li>
                     <li>
                       👨‍🌾 Farmer:{' '}
                       <button
@@ -168,12 +183,13 @@ const DashboardBuyer = () => {
         )}
       </div>
 
+      {/* Modal */}
       {showModal && (
         <div className="modal show fade d-block modal-backdrop-custom">
           <div className="modal-dialog">
             <div className="modal-content p-4">
               <h5 className="mb-3">Express Interest</h5>
-              <p>How much quantity (kg) you want to buy?</p>
+              <p>How much quantity (kg) you want to buy for crop <b>{selectedCrop?.name}</b>?</p>
               <input
                 type="number"
                 className="form-control"
@@ -181,9 +197,18 @@ const DashboardBuyer = () => {
                 onChange={(e) => setInterestQuantity(e.target.value)}
                 min={1}
               />
+              {interestQuantity && selectedCrop?.price && (
+                <p className="mt-3">
+                  💰 Total: ₹{parseInt(interestQuantity) * parseFloat(selectedCrop.price)}
+                </p>
+              )}
               <div className="d-flex justify-content-end gap-2 mt-4">
-                <button className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
-                <button className="btn btn-success" onClick={handleSubmitInterest}>Submit</button>
+                <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                  Cancel
+                </button>
+                <button className="btn btn-success" onClick={handleSubmitInterest} disabled={paying}>
+                  {paying ? 'Processing...' : 'Pay & Submit'}
+                </button>
               </div>
             </div>
           </div>
