@@ -44,14 +44,18 @@ router.patch('/users/:id/status', async (req, res) => {
 });
 
 
-// GET /api/admin/crops — all crops with farmer details
+// GET /api/admin/crops — all crops with farmer details (only active farmers)
 router.get('/crops', async (req, res) => {
   try {
     const crops = await Crop.find()
-      .populate('farmerId', 'name email location isActive') // only relevant farmer fields
-      .sort({ createdAt: -1 });
+      .populate('farmerId', 'name email location isActive') // get only needed fields
+      .sort({ createdAt: -1 })
+      .lean(); // lean() allows us to use .filter
 
-    res.json(crops);
+    // Filter out crops where the farmer is deactivated
+    const visibleCrops = crops.filter(crop => crop.farmerId?.isActive !== false);
+
+    res.json(visibleCrops);
   } catch (err) {
     console.error('Error fetching admin crops:', err);
     res.status(500).json({ error: 'Failed to fetch crops' });

@@ -43,7 +43,7 @@ const DashboardAdmin = () => {
             <div className="card border-0 shadow-sm h-100 p-4">
               <h5 className="text-info">📊 Market Oversight</h5>
               <p className="small text-muted">Check prices and sync with Agmarknet API.</p>
-              <button className="btn btn-outline-info mt-auto w-100">
+              <button className="btn btn-outline-info mt-auto w-100" onClick={() => navigate('/admin/pricedata')}>
                 Sync Market Data
               </button>
             </div>

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'animate.css';
-import NavbarWithLogout from '../components/NavbarWithLogout';
 
 const CropListingForm = () => {
   const user = JSON.parse(localStorage.getItem('user')); // get user from localStorage
@@ -49,7 +48,7 @@ const CropListingForm = () => {
 
   return (
     <div className="bg-light min-vh-100 px-3 py-5 animate__animated animate__fadeIn">
-      <NavbarWithLogout />
+     
 
       <div className="container">
         <div className="card shadow p-4 mx-auto" style={{ maxWidth: 550 }}>

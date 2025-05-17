@@ -5,46 +5,49 @@ import 'animate.css';
 
 const Login = () => {
   const [role, setRole] = useState('farmer');
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
       const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: username, password }),
+        body: JSON.stringify({ email, password, role }),
       });
-      if (response.status === 403) {
-        const data = await response.json();
-        alert(data.message); // shows: "Your account has been deactivated by admin"
-        return;
-      }
-      
 
       const data = await response.json();
-      
-      if (response.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('userRole', data.user.role);
-        localStorage.setItem('user', JSON.stringify(data.user)); // 👈 this was missing
-      
-        // Navigate to dashboard
-        if (data.user.role === 'farmer') navigate('/farmer-dashboard');
-        else if (data.user.role === 'buyer') navigate('/buyer-dashboard');
-        else if (data.user.role === 'admin') navigate('/admin-dashboard');
-      
-        // Optional: force refresh to update navbar
-        setTimeout(() => window.location.reload(), 100);
+
+      if (response.status === 403) {
+        alert(data.message || 'Account deactivated');
+        return;
       }
-      else {
-        alert(data.error || 'Login failed');
+
+      if (!response.ok) {
+        alert(data.message || 'Login failed');
+        return;
       }
+
+      if (data.user.role !== role && data.user.role !== 'admin') {
+        alert(`❌ Role mismatch. You selected ${role} but your account is ${data.user.role}`);
+        return;
+      }
+
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('userRole', data.user.role);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      if (data.user.role === 'farmer') navigate('/farmer-dashboard');
+      else if (data.user.role === 'buyer') navigate('/buyer-dashboard');
+      else if (data.user.role === 'admin') navigate('/admin-dashboard');
+
+      setTimeout(() => window.location.reload(), 100);
     } catch (err) {
-      console.error(err);
-      alert('Something went wrong');
+      console.error('Login error:', err);
+      alert('Something went wrong. Try again.');
     }
   };
 
@@ -77,12 +80,12 @@ const Login = () => {
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Username</label>
+            <label className="form-label">Email</label>
             <input
-              type="text"
+              type="email"
               className="form-control shadow-sm"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               required
             />
@@ -105,7 +108,7 @@ const Login = () => {
 
         <div className="text-center mt-3">
           <small className="text-muted">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link to="/register" className="text-decoration-none">
               Register here
             </Link>

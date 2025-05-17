@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import NavbarWithLogout from '../components/NavbarWithLogout';
+
 
 const FarmerMyCrops = () => {
   const [myCrops, setMyCrops] = useState([]);
@@ -101,7 +101,7 @@ const FarmerMyCrops = () => {
   return (
     <div className="bg-light min-vh-100 px-3 py-5">
       <div className="container">
-        <NavbarWithLogout />
+        
         <h3 className="text-success mb-4 text-center">🌾 My Crops</h3>
 
         {loading ? (
