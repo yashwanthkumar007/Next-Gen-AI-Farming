@@ -68,7 +68,9 @@ app.use('/api/users', userRoutes);
 app.use('/api/admin', require('./routes/adminRoutes'));
 
 // paymentroutes
-app.use('/api/payment', require('./routes/paymentRoutes'));
+const paymentRoutes = require('./routes/paymentRoutes');
+app.use('/api/payment', paymentRoutes);
+
 
 
 // Start the server

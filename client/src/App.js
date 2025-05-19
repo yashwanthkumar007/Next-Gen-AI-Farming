@@ -26,6 +26,9 @@ import MarketData from "./pages/MarketData";
 import AdminUserList from "./pages/AdminUserList";
 import AdminCropList from "./pages/AdminCropList";
 import MarketPriceViewer from "./pages/MarketPriceViewer";
+import PaymentPage from './pages/PaymentPage';
+import PaymentSummary from "./pages/PaymentSummary";
+import CardPayment from "./pages/CardPayment";
 
 // Components
 import NavbarWithLogout from "./components/NavbarWithLogout";
@@ -77,6 +80,22 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+        <Route path="/payment/:cropId" element={<ProtectedRoute allowedRoles={['buyer']}>
+<CardPayment/>
+</ProtectedRoute>} />
+        <Route
+path="/payment/:cropId"
+element={
+<ProtectedRoute allowedRoles={['buyer']}>
+<PaymentSummary />
+</ProtectedRoute>
+}
+/>
+        <Route path="/payment/:cropId/:quantity" element={
+  <ProtectedRoute allowedRoles={['buyer']}>
+    <PaymentPage />
+  </ProtectedRoute>
+} />
 
         {/* Farmer Routes */}
         <Route
