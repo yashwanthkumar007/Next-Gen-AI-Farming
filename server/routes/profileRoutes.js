@@ -3,37 +3,55 @@ const router = express.Router();
 const User = require('../models/User');
 const protect = require('../middleware/authMiddleware');
 
-// ✅ GET /api/profile → get logged-in user’s profile
+// GET /api/profile → get current user's profile
 router.get('/', protect, async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id).select('-password');
-    res.status(200).json(user);
-  } catch (err) {
-    res.status(500).json({ message: 'Failed to fetch profile' });
+try {
+const user = await User.findById(req.user.userId).select('-password');
+res.status(200).json(user);
+} catch (err) {
+res.status(500).json({ message: 'Failed to fetch profile' });
+}
+});
+
+// PUT /api/profile → update user profile (with Razorpay ID for farmers)
+router.put('/', protect, async (req, res) => {
+const userId = req.user.userId;
+const updates = req.body;
+
+try {
+const user = await User.findById(userId);
+if (!user) return res.status(404).json({ error: 'User not found' });
+
+const allowedFields = ['name', 'phone', 'location', 'bio'];
+
+allowedFields.forEach((field) => {
+  if (updates[field] !== undefined) {
+    user[field] = updates[field];
   }
 });
 
-// ✅ PUT /api/profile → update logged-in user’s profile
-router.put('/', protect, async (req, res) => {
-  try {
-    const updates = {
-      name: req.body.name,
-      phone: req.body.phone,
-      location: req.body.location,
-      bio: req.body.bio
-    };
+if (user.role === 'farmer' && updates.razorpayAccountId !== undefined) {
+  user.razorpayAccountId = updates.razorpayAccountId;
+}
 
-    const updatedUser = await User.findByIdAndUpdate(
-      req.user._id,
-      { $set: updates },
-      { new: true }
-    ).select('-password');
+await user.save();
 
-    res.status(200).json(updatedUser);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Failed to update profile' });
-  }
+const updatedUser = {
+  id: user._id,
+  name: user.name,
+  email: user.email,
+  role: user.role,
+  phone: user.phone,
+  location: user.location,
+  bio: user.bio,
+  razorpayAccountId: user.razorpayAccountId || null
+};
+
+res.json(updatedUser);
+} catch (err) {
+console.error('Profile update error:', err);
+res.status(500).json({ error: 'Failed to update profile' });
+}
 });
 
 module.exports = router;

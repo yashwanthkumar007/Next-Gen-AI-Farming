@@ -66,6 +66,9 @@ return (
 <button className="btn btn-outline-primary btn-sm" onClick={() => navigate('/profile')}>
 👤 My Profile
 </button>
+<button className="btn btn-outline-primary btn-sm" onClick={() => navigate('/buyer/transactions')}>
+👤 My Purchase
+</button>
 </div>
 
 

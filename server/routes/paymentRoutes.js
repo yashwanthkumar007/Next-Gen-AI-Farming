@@ -2,6 +2,7 @@ const express = require('express');
 const Razorpay = require('razorpay');
 const Crop = require('../models/Crop');
 const User = require('../models/User');
+const Transaction = require('../models/Transaction');
 const router = express.Router();
 
 const razorpay = new Razorpay({
@@ -13,8 +14,8 @@ const razorpay = new Razorpay({
 router.post('/process', async (req, res) => {
   try {
     const { cropId, quantity, buyerId } = req.body;
-
     const parsedQty = parseInt(quantity);
+
     if (!cropId || !buyerId || isNaN(parsedQty) || parsedQty <= 0) {
       return res.status(400).json({ error: 'Missing or invalid cropId, quantity, or buyerId' });
     }
@@ -50,7 +51,7 @@ router.post('/process', async (req, res) => {
   }
 });
 
-// ✅ Simulate Payment (Mock Razorpay Transfer)
+// ✅ Simulate Payment (Mock Transfer)
 router.post('/simulate', async (req, res) => {
   try {
     const { orderId, cropId, quantity, buyerId } = req.body;
@@ -70,8 +71,9 @@ router.post('/simulate', async (req, res) => {
 
     const amountInPaise = crop.price * parsedQty * 100;
 
-    console.log(`✅ Mock Transfer to: ${farmer.razorpayAccountId}, ₹${amountInPaise / 100}`);
+    console.log(`✅ Transfer to: ${farmer.razorpayAccountId}, ₹${amountInPaise / 100}`);
 
+    // MOCK transfer
     const transfer = {
       id: 'mock_transfer_' + Date.now(),
       amount: amountInPaise,
@@ -79,7 +81,19 @@ router.post('/simulate', async (req, res) => {
       status: 'mock_success',
     };
 
+    // Update crop quantity
     crop.quantity -= parsedQty;
+
+    // ✅ Store transaction
+    await Transaction.create({
+      cropName: crop.name,
+      quantity: parsedQty,
+      pricePerKg: crop.price,
+      totalAmount: crop.price * parsedQty,
+      buyerId,
+      farmerId: crop.farmerId,
+    });
+
     if (crop.quantity <= 0) {
       await Crop.findByIdAndDelete(cropId);
     } else {
@@ -95,5 +109,7 @@ router.post('/simulate', async (req, res) => {
     res.status(500).json({ error: 'Simulated payment failed' });
   }
 });
+
+
 
 module.exports = router;
