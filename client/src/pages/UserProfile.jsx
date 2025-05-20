@@ -3,16 +3,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const UserProfile = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    location: '',
-    bio: '',
-    role: ''
-  });
+  const [formData, setFormData] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(true);
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
 
@@ -24,12 +18,19 @@ const UserProfile = () => {
         });
         setFormData(res.data);
       } catch (err) {
-        setMessage('❌ Failed to load profile');
+        console.error(err.response?.data || err.message);
+        if (err.response?.status === 401) {
+          navigate('/login');
+        } else {
+          setMessage('❌ Failed to load profile');
+        }
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchProfile();
-  }, [token]);
+  }, [token, navigate]);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -47,9 +48,18 @@ const UserProfile = () => {
       setMessage('✅ Profile updated');
       setEditMode(false);
     } catch (err) {
-      setMessage('❌ Failed to update');
+      console.error(err.response?.data || err.message);
+      setMessage('❌ Failed to update profile');
     }
   };
+
+  if (loading) {
+    return <div className="text-center mt-5">Loading profile...</div>;
+  }
+
+  if (!formData) {
+    return <div className="text-danger text-center mt-5">Unable to load profile.</div>;
+  }
 
   return (
     <div className="bg-light min-vh-100 px-3 py-5">
@@ -66,7 +76,12 @@ const UserProfile = () => {
           <div className="mb-3">
             <label>Name</label>
             {editMode ? (
-              <input name="name" value={formData.name} onChange={handleChange} className="form-control" />
+              <input
+                name="name"
+                value={formData.name || ''}
+                onChange={handleChange}
+                className="form-control"
+              />
             ) : (
               <div className="form-control-plaintext">{formData.name}</div>
             )}
@@ -85,7 +100,12 @@ const UserProfile = () => {
           <div className="mb-3">
             <label>Phone</label>
             {editMode ? (
-              <input name="phone" value={formData.phone} onChange={handleChange} className="form-control" />
+              <input
+                name="phone"
+                value={formData.phone || ''}
+                onChange={handleChange}
+                className="form-control"
+              />
             ) : (
               <div className="form-control-plaintext">{formData.phone || 'N/A'}</div>
             )}
@@ -94,7 +114,12 @@ const UserProfile = () => {
           <div className="mb-3">
             <label>Location</label>
             {editMode ? (
-              <input name="location" value={formData.location} onChange={handleChange} className="form-control" />
+              <input
+                name="location"
+                value={formData.location || ''}
+                onChange={handleChange}
+                className="form-control"
+              />
             ) : (
               <div className="form-control-plaintext">{formData.location || 'N/A'}</div>
             )}
@@ -103,11 +128,35 @@ const UserProfile = () => {
           <div className="mb-3">
             <label>Bio</label>
             {editMode ? (
-              <textarea name="bio" rows={3} value={formData.bio} onChange={handleChange} className="form-control" />
+              <textarea
+                name="bio"
+                rows={3}
+                value={formData.bio || ''}
+                onChange={handleChange}
+                className="form-control"
+              />
             ) : (
               <div className="form-control-plaintext">{formData.bio || 'N/A'}</div>
             )}
           </div>
+
+          {formData.role === 'farmer' && (
+            <div className="mb-3">
+              <label>Razorpay Account ID</label>
+              {editMode ? (
+                <input
+                  name="razorpayAccountId"
+                  value={formData.razorpayAccountId || ''}
+                  onChange={handleChange}
+                  className="form-control"
+                />
+              ) : (
+                <div className="form-control-plaintext">
+                  {formData.razorpayAccountId || 'Not Provided'}
+                </div>
+              )}
+            </div>
+          )}
 
           {editMode ? (
             <div className="d-flex justify-content-between">

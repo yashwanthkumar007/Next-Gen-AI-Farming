@@ -26,6 +26,12 @@ import MarketData from "./pages/MarketData";
 import AdminUserList from "./pages/AdminUserList";
 import AdminCropList from "./pages/AdminCropList";
 import MarketPriceViewer from "./pages/MarketPriceViewer";
+import PaymentPage from './pages/PaymentPage';
+import PaymentSummary from "./pages/PaymentSummary";
+import CardPayment from "./pages/CardPayment";
+import AdminTransactionList from "./pages/AdminTransactionList";
+import BuyerTransactionHistory from "./pages/BuyerTransactionHistory";
+import FarmerTransactions from "./pages/FarmerTransactions";
 
 // Components
 import NavbarWithLogout from "./components/NavbarWithLogout";
@@ -33,6 +39,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 // Styles
 import "./styles/market.css";
+import BuyerPublicProfile from "./pages/BuyerPublicProfile";
 
 // Layout-aware routing wrapper
 const AppRoutes = () => {
@@ -77,6 +84,37 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+        <Route path="/payment/:cropId" element={<ProtectedRoute allowedRoles={['buyer']}>
+<CardPayment/>
+</ProtectedRoute>} />
+        <Route
+path="/payment/:cropId"
+element={
+<ProtectedRoute allowedRoles={['buyer']}>
+<PaymentSummary />
+</ProtectedRoute>
+}
+/>
+
+<Route path="/buyer/transactions" element={
+  <ProtectedRoute allowedRoles={['buyer']}>
+    <BuyerTransactionHistory/>
+  </ProtectedRoute>
+} />
+  <Route path="/my-transactions" element={
+<ProtectedRoute allowedRoles={['farmer']}>
+<FarmerTransactions />
+</ProtectedRoute>
+} />
+
+
+
+
+        <Route path="/payment/:cropId/:quantity" element={
+  <ProtectedRoute allowedRoles={['buyer']}>
+    <PaymentPage />
+  </ProtectedRoute>
+} />
 
         {/* Farmer Routes */}
         <Route
@@ -148,12 +186,19 @@ const AppRoutes = () => {
         <Route
           path="/farmer/:id"
           element={
-            <ProtectedRoute allowedRoles={["buyer"]}>
+            <ProtectedRoute allowedRoles={["buyer" , "admin"]}>
               <FarmerPublicProfile />
             </ProtectedRoute>
           }
         />
-
+          <Route
+          path="/buyer/:id"
+          element={
+            <ProtectedRoute allowedRoles={["farmer" , "admin"]}>
+              <BuyerPublicProfile />
+            </ProtectedRoute>
+          }
+        />
         {/* Recommendation (AI-based) */}
         <Route
           path="/recommend"
@@ -189,6 +234,12 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+        <Route path="/admin/transactions" element={
+  <ProtectedRoute allowedRoles={['admin']}>
+    <AdminTransactionList />
+  </ProtectedRoute>
+} />
+
 
         {/* Alias route for farmers to view market prices */}
         <Route

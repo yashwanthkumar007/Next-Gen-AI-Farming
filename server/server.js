@@ -67,6 +67,13 @@ app.use('/api/users', userRoutes);
 
 app.use('/api/admin', require('./routes/adminRoutes'));
 
+// paymentroutes
+const paymentRoutes = require('./routes/paymentRoutes');
+app.use('/api/payment', paymentRoutes);
+
+//transaction
+app.use('/api/transactions', require('./routes/transactionRoutes'));
+
 
 // Start the server
 const PORT = process.env.PORT || 5000;

@@ -13,6 +13,9 @@ const DashboardFarmer = () => {
           <button className="btn btn-outline-primary" onClick={() => navigate('/profile')}>
             👤 My Profile
           </button>
+          <button className="btn btn-outline-primary" onClick={() => navigate('/my-transactions')}>
+            👤 My Transaction
+          </button>
         </nav>
 
         <div className="card shadow-sm p-4 border-0 rounded-4">

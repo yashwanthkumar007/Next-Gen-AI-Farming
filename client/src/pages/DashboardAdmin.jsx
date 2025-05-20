@@ -48,6 +48,17 @@ const DashboardAdmin = () => {
               </button>
             </div>
           </div>
+
+            {/* 4. Transaction Oversight */}
+           <div className="col-md-4">
+            <div className="card border-0 shadow-sm h-100 p-4">
+              <h5 className="text-info">Transaction List</h5>
+              <p className="small text-muted">Check All Transaction.</p>
+              <button className="btn btn-outline-info mt-auto w-100" onClick={() => navigate('/admin/transactions')}>
+                Transaction
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
