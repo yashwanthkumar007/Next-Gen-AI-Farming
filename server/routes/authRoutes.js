@@ -16,35 +16,42 @@ router.get('/profile', protect, (req, res) => {
 
 // ✅ Register a new user (farmer or buyer)
 router.post('/register', async (req, res) => {
-  const { name, email, password, role } = req.body;
+const { name, email, password, role, phone, location, bio, razorpayAccountId } = req.body;
 
-  if (!name || !email || !password || !role) {
-    return res.status(400).json({ message: 'All fields are required' });
-  }
+if (!name || !email || !password || !role) {
+return res.status(400).json({ message: 'Required fields are missing' });
+}
 
-  try {
-    const existing = await User.findOne({ email });
-    if (existing) {
-      return res.status(400).json({ message: 'Email already registered' });
-    }
+if (role === 'farmer' && !razorpayAccountId) {
+return res.status(400).json({ message: 'Razorpay Account ID required for farmers' });
+}
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+try {
+const existing = await User.findOne({ email });
+if (existing) {
+return res.status(400).json({ message: 'Email already registered' });
+}
 
-    const newUser = new User({
-      name,
-      email,
-      password: hashedPassword,
-      role,
-    });
+const hashedPassword = await bcrypt.hash(password, 10);
 
-    await newUser.save();
-    res.status(201).json({ message: 'Registration successful' });
-  } catch (err) {
-    console.error('Register error:', err.message);
-    res.status(500).json({ message: 'Server error' });
-  }
+const newUser = new User({
+  name,
+  email,
+  password: hashedPassword,
+  role,
+  phone,
+  location,
+  bio,
+  razorpayAccountId
 });
 
+await newUser.save();
+res.status(201).json({ message: 'Registration successful' });
+} catch (err) {
+console.error('Register error:', err.message);
+res.status(500).json({ message: 'Server error' });
+}
+});
 // ✅ Login Route
 router.post('/login', async (req, res) => {
   const { email, password, role } = req.body;
