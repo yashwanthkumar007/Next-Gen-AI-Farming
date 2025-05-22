@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import '../styles/FarmerMyCrops.css';
 
 const FarmerMyCrops = () => {
   const [myCrops, setMyCrops] = useState([]);
@@ -99,10 +99,9 @@ const FarmerMyCrops = () => {
   };
 
   return (
-    <div className="bg-light min-vh-100 px-3 py-5">
-      <div className="container">
-        
-        <h3 className="text-success mb-4 text-center">🌾 My Crops</h3>
+    <div className="my-crops-wrapper">
+      <div className="container py-5">
+        <h3 className="text-success mb-4 text-center my-crop-text">🌾 My Crops</h3>
 
         {loading ? (
           <div className="text-center mt-5">
@@ -115,16 +114,16 @@ const FarmerMyCrops = () => {
           <div className="row g-4">
             {myCrops.map((crop) => (
               <div className="col-md-4" key={crop._id}>
-                <div className="card p-3 shadow-sm border-0">
+                <div className="card crop-card glass shadow-lg p-3">
                   <h5 className="text-success">{crop.name}</h5>
                   <ul className="list-unstyled small text-muted">
                     <li>📍 {crop.location}</li>
                     <li>🧺 {crop.quantity} kg</li>
                     <li>💰 {crop.price} per kg</li>
                   </ul>
-                  <div className="d-flex justify-content-between">
+                  <div className="d-flex justify-content-between mt-3">
                     <button
-                      className="btn btn-sm btn-outline-primary"
+                      className="btn btn-sm btn-outline-darkgreen"
                       onClick={() => openEditModal(crop)}
                     >
                       ✏️ Update
@@ -143,7 +142,6 @@ const FarmerMyCrops = () => {
         )}
       </div>
 
-      {/* Toast Popup */}
       {toastMessage && (
         <div
           className="toast align-items-center text-white bg-success position-fixed bottom-0 end-0 m-4 show"
@@ -156,14 +154,9 @@ const FarmerMyCrops = () => {
         </div>
       )}
 
-      {/* Edit Modal */}
       {showModal && (
-        <div
-          className="modal fade show d-block"
-          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
-          tabIndex="-1"
-        >
-          <div className="modal-dialog">
+        <div className="modal fade show d-block backdrop" tabIndex="-1">
+          <div className="modal-dialog animate__animated animate__zoomIn">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">✏️ Update Crop</h5>
@@ -208,14 +201,9 @@ const FarmerMyCrops = () => {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
       {showDeleteModal && (
-        <div
-          className="modal fade show d-block"
-          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
-          tabIndex="-1"
-        >
-          <div className="modal-dialog">
+        <div className="modal fade show d-block backdrop" tabIndex="-1">
+          <div className="modal-dialog animate__animated animate__fadeInDown">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title text-danger">🗑️ Confirm Delete</h5>
@@ -229,10 +217,7 @@ const FarmerMyCrops = () => {
                 <p>Are you sure you want to delete this crop?</p>
               </div>
               <div className="modal-footer">
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => setShowDeleteModal(false)}
-                >
+                <button className="btn btn-secondary" onClick={() => setShowDeleteModal(false)}>
                   Cancel
                 </button>
                 <button className="btn btn-danger" onClick={confirmDeleteCrop}>

@@ -1,0 +1,26 @@
+.admin-tx-bg {
+  min-height: 100vh;
+  background: url('/images/admintrans.jpg') no-repeat center center/cover;
+  background-color: rgba(240, 255, 240, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 2rem;
+}
+
+.admin-tx-table {
+  background-color: rgba(255, 255, 255, 0.92);
+  border-radius: 16px;
+  color: black !important;
+  transition: transform 0.3s ease;
+}
+.black-text{
+   color: black !important;
+}
+.admin-tx-table:hover {
+  transform: scale(1.01);
+}
+
+.admin-tx-table th,
+.admin-tx-table td {
+  vertical-align: middle;
+}

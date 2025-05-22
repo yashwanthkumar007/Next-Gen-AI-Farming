@@ -1,0 +1,15 @@
+
+
+.admin-crop-container {
+  background: url('/images/admincrops.jpg') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+}
+
+.admin-crop-bg-blur {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #1e4620;
+}

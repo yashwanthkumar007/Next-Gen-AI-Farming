@@ -1,0 +1,156 @@
+/* full‐screen farm background */
+.mpv-bg {
+  background: url('/images/price.jpg') center/cover no-repeat fixed;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* main glass panel */
+.mpv-container {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  padding: 2rem;
+  max-width: 800px;
+  width: 100%;
+  animation: mpv-fadeIn 0.8s ease-out;
+}
+
+/* Titles */
+.mpv-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.mpv-subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #34495e;
+}
+
+/* Field wrappers */
+.mpv-field {
+  margin-bottom: 1rem;
+}
+
+.mpv-label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+
+/* Inputs */
+.mpv-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  transition: all 0.3s ease;
+}
+
+.mpv-input:focus {
+  outline: none;
+  border-color: #28a745;
+  box-shadow: 0 0 8px rgba(40, 167, 69, 0.3);
+  background: #fff;
+}
+
+/* Fetch button */
+.mpv-button {
+  display: inline-block;
+  margin: 0.5rem 0 1.5rem;
+  padding: 0.65rem 1.25rem;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.mpv-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mpv-button:hover:not(:disabled) {
+  background-color: #1e7e34;
+  transform: scale(1.03);
+}
+
+/* Error alert */
+.mpv-error {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: #f8d7da;
+  color: #842029;
+  border-radius: 8px;
+}
+
+/* Table styling */
+.mpv-table-wrapper {
+  overflow-x: auto;
+  margin-top: 1.5rem;
+}
+
+.mpv-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0.5rem;
+  animation: mpv-fadeInUp 0.8s ease-out;
+}
+
+.mpv-table th,
+.mpv-table td {
+  padding: 0.75rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+}
+
+.mpv-table th {
+  font-weight: 600;
+  color: #155724;
+}
+
+.mpv-table tr td:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.mpv-table tr td:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+/* Animations */
+@keyframes mpv-fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mpv-fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,79 @@
+/* Unique class prefix: bpp- */
+
+.bpp-wrapper {
+  position: relative;
+  min-height: 80vh;
+  background: url('/images/bpp.jpg') no-repeat center center/cover;
+  overflow: hidden;
+  border-radius: 12px;
+  padding: 3rem 2rem;
+}
+
+.bpp-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(25, 75, 30, 0.45); /* subtle green transparent overlay */
+  backdrop-filter: blur(7px);
+  z-index: 0;
+  border-radius: 12px;
+}
+
+.bpp-card {
+  position: relative;
+  z-index: 1;
+  background-color: rgba(240, 255, 240, 0.9);
+  border: 2px solid #2a7a2a;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(42, 122, 42, 0.4);
+  max-width: 600px;
+  margin: auto;
+  transition: transform 0.3s ease;
+}
+
+.bpp-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 35px rgba(42, 122, 42, 0.7);
+}
+
+.bpp-title {
+  font-weight: 700;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #2a7a2a;
+  text-align: center;
+  text-shadow: 1px 1px 2px #1b4d1b;
+}
+
+.bpp-info {
+  color: #1b4d1b;
+  font-weight: 500;
+}
+
+.bpp-loading-container, .bpp-error-container {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.bpp-spinner {
+  width: 3rem;
+  height: 3rem;
+  border-width: 0.35rem;
+  border-color: #2a7a2a transparent transparent transparent;
+}
+
+.bpp-loading-text {
+  color: #2a7a2a;
+  font-weight: 600;
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadein {
+  animation: fadein 0.8s ease forwards;
+}

@@ -1,44 +1,77 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/DashboardFarmer.css';
 
 const DashboardFarmer = () => {
   const navigate = useNavigate();
 
+  const cards = [
+    {
+      title: 'Get Fertilizer Recommendation',
+      route: '/recommend',
+      bg: 'images/fertilizer.jpg',
+    },
+    {
+      title: 'List New Crop',
+      route: '/list-crop',
+      bg: 'images/crop.jpg',
+    },
+    {
+      title: 'Leaf Color Chart',
+      route: '/leaf-color-checker',
+      bg: 'images/leaf.jpg',
+    },
+    {
+      title: 'Soil Health',
+      route: '/soil-health',
+      bg: 'images/soil.jpg',
+    },
+    {
+      title: 'Manage My Crops',
+      route: '/farmer-crops',
+      bg: 'images/manage.jpg',
+    },
+    {
+      title: 'Market Prices',
+      route: '/price-market',
+      bg: 'images/market.jpg',
+    },
+  ];
+
   return (
     <main style={{ backgroundColor: '#f0f9f1', minHeight: '100vh' }}>
       <div className="container py-4">
-        <nav className="navbar navbar-light bg-light rounded-3 mb-4 px-3">
-          <span className="navbar-brand mb-0 h5">👨‍🌾 Farmer Dashboard</span>
-          <button className="btn btn-outline-primary" onClick={() => navigate('/profile')}>
-            👤 My Profile
-          </button>
-          <button className="btn btn-outline-primary" onClick={() => navigate('/my-transactions')}>
-            👤 My Transaction
-          </button>
+        <nav className="navbar navbar-expand-lg rounded-4 px-4 mb-4 vibrant-nav">
+          <span className="navbar-brand text-white fw-bold h4">👨‍🌾 Farmer Dashboard</span>
+          <div className="ms-auto d-flex gap-2">
+            <button className="btn btn-light" onClick={() => navigate('/profile')}>
+              👤 My Profile
+            </button>
+            <button className="btn btn-light" onClick={() => navigate('/my-transactions')}>
+              💰 My Transactions
+            </button>
+          </div>
         </nav>
 
-        <div className="card shadow-sm p-4 border-0 rounded-4">
-          <h5 className="mb-3 text-center text-success">Welcome to your smart farming assistant</h5>
+        <h5 className="mb-3 text-center text-success fw-semibold">
+          Welcome to your smart farming assistant
+        </h5>
 
-          <button className="btn btn-outline-success w-100 mb-3" onClick={() => navigate('/recommend')}>
-            Get Fertilizer Recommendation
-          </button>
-          <button className="btn btn-outline-success w-100 mb-3" onClick={() => navigate('/list-crop')}>
-            + List New Crop
-          </button>
-          <button className="btn btn-outline-success w-100 mb-3" onClick={() => navigate('/leaf-color-checker')}>
-            🍃 Leaf Color Chart
-          </button>
-          <button className="btn btn-outline-success w-100 mb-3" onClick={() => navigate('/soil-health')}>
-            Soil Health
-          </button>
-          <button className="btn btn-outline-success w-100 mb-3" onClick={() => navigate('/farmer-crops')}>
-            🌾 Manage My Crops
-          </button>
-          <button className="btn btn-outline-success w-100 mb-3" onClick={() => navigate('/price-market')}>
-            📊 Market Prices
-          </button>
+        <div className="row g-4">
+          {cards.map((card, index) => (
+            <div key={index} className="col-md-6">
+              <div
+                className="dashboard-card"
+                style={{
+                  backgroundImage: `url(${card.bg})`,
+                }}
+                onClick={() => navigate(card.route)}
+              >
+                <div className="card-overlay text-white fw-semibold">{card.title}</div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </main>

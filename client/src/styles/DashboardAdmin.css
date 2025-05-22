@@ -1,0 +1,32 @@
+.admin-bg {
+  min-height: 100vh;
+  background: url('/images/adminbg.jpg') no-repeat center center/cover;
+  backdrop-filter: blur(10px);
+  background-color: rgba(240, 255, 240, 0.85); /* light green tint */
+}
+
+.custom-card {
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 16px;
+  border: none;
+  color: black !important;
+  box-shadow: 0 4px 8px rgba(0, 128, 0, 0.1);
+  transition: transform 0.3s ease;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: black;
+}
+
+
+.custom-card:hover {
+  transform: translateY(-5px);
+}
+
+.custom-card h5,
+.custom-card p {
+  color: black !important;
+}

@@ -1,0 +1,61 @@
+.recommend-bg {
+  background-image: url('/images/fertilizerr.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+
+/* Header remains vibrant */
+.header-card {
+  background-color: rgba(9, 137, 9, 0.85);
+  backdrop-filter: blur(4px);
+  color: white;
+  padding: 1rem;
+  border-radius: 12px;
+}
+
+/* Blur and transparency only behind form elements */
+.form-wrapper {
+  background-color: rgba(255, 255, 255, 0.8); /* Light transparent white */
+  backdrop-filter: blur(6px);
+  padding: 1.5rem;
+  border-radius: 16px;
+}
+
+/* Blur and transparency only behind result */
+.result-wrapper {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(6px);
+  padding: 1.5rem;
+  border-radius: 16px;
+}
+.glass-form {
+  background-color: rgba(255, 255, 255, 0.7); /* semi-transparent white */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* soft shadow */
+  border: none;
+}
+.glass-result {
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: none;
+}
+.glass-list-group .list-group-item {
+  background-color: rgba(255, 255, 255, 0.4); /* semi-transparent */
+  border-radius: 12px; /* curved corners */
+  margin-bottom: 10px; /* gap between items */
+  border: none; /* remove default border */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* subtle shadow for depth */
+  backdrop-filter: blur(6px); /* maintain glass effect on each item */
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Remove margin for the last item to avoid extra space */
+.glass-list-group .list-group-item:last-child {
+  margin-bottom: 0;
+}
+

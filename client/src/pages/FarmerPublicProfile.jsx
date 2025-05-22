@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import NavbarWithLogout from '../components/NavbarWithLogout';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'animate.css';
+import '../styles/FarmerPublicProfile.css';
 
 const FarmerPublicProfile = () => {
-  const { id } = useParams(); // farmerId from URL
+  const { id } = useParams();
   const [farmer, setFarmer] = useState(null);
   const [error, setError] = useState('');
 
@@ -23,25 +26,34 @@ const FarmerPublicProfile = () => {
   }, [id]);
 
   return (
-    <div className="bg-light min-vh-100 px-3 py-5 animate__animated animate__fadeIn">
-      
-      <div className="container">
-        <h3 className="text-center text-success mb-4">👨‍🌾 Farmer Profile</h3>
-        {error ? (
-          <div className="alert alert-danger text-center">{error}</div>
-        ) : farmer ? (
-          <div className="card p-4 shadow-sm mx-auto" style={{ maxWidth: 500 }}>
-            <ul className="list-unstyled mb-0">
-              <li><strong>Name:</strong> {farmer.name || 'N/A'}</li>
-              <li><strong>Email:</strong> {farmer.email || 'N/A'}</li>
-              <li><strong>Phone:</strong> {farmer.phone || 'N/A'}</li>
-              <li><strong>Location:</strong> {farmer.location || 'N/A'}</li>
-              <li><strong>Bio:</strong> {farmer.bio || 'N/A'}</li>
+    <div className="farmer-profile-bg min-vh-100 d-flex flex-column">
+      <div className="container d-flex flex-grow-1 align-items-center justify-content-center">
+        <div className="profile-card card p-4 shadow-lg animate__animated animate__fadeIn">
+          <h3 className="text-center text-success mb-4">👨‍🌾 Farmer Profile</h3>
+          {error ? (
+            <div className="alert alert-danger text-center">{error}</div>
+          ) : farmer ? (
+            <ul className="list-group list-group-flush">
+              <li className="list-group-item bg-transparent">
+                <strong>Name:</strong> {farmer.name || 'N/A'}
+              </li>
+              <li className="list-group-item bg-transparent">
+                <strong>Email:</strong> {farmer.email || 'N/A'}
+              </li>
+              <li className="list-group-item bg-transparent">
+                <strong>Phone:</strong> {farmer.phone || 'N/A'}
+              </li>
+              <li className="list-group-item bg-transparent">
+                <strong>Location:</strong> {farmer.location || 'N/A'}
+              </li>
+              <li className="list-group-item bg-transparent">
+                <strong>Bio:</strong> {farmer.bio || 'N/A'}
+              </li>
             </ul>
-          </div>
-        ) : (
-          <p className="text-center">Loading...</p>
-        )}
+          ) : (
+            <p className="text-center text-white">Loading...</p>
+          )}
+        </div>
       </div>
     </div>
   );
