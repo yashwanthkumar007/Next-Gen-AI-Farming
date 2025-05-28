@@ -10,7 +10,7 @@
   align-items: center; */
 }
 
-.glass-card {
+.glass-card { 
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -29,6 +29,10 @@
 
 .fade-in {
   animation-name: fadeInUp;
+}
+
+.btn-outline-secondary{
+  --bs-btn-color: #f0f4f7;
 }
 
 @keyframes fadeInUp {
