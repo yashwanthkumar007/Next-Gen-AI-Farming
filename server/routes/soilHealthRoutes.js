@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-router.post('/api/soil-health', (req, res) => {
+router.post('/', (req, res) => {
   const { crop, location, nitrogen, phosphorus, potassium, ph, organicCarbon } = req.body;
 
   const recommendations = {
