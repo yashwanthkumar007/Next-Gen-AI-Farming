@@ -61,12 +61,12 @@ return matchesName && matchesLocation && matchesMin && matchesMax;
 return (
 <div className="dashboard-container animate__animated animate__fadeIn">
 <div className="container">
-<div className="d-flex justify-content-between align-items-center mb-4">
+<div className="d-flex justify-content-between align-items-center mb-4 dashcont">
 <h3 className="text-warning">🛒 Buyer Dashboard</h3>
-<button className="btn btn-outline-primary btn-sm" onClick={() => navigate('/profile')}>
+<button className="btn btn-outline-darkgreen btn-sm" onClick={() => navigate('/profile')}>
 👤 My Profile
 </button>
-<button className="btn btn-outline-primary btn-sm" onClick={() => navigate('/buyer/transactions')}>
+<button className="btn btn-outline-darkgreen btn-sm" onClick={() => navigate('/buyer/transactions')}>
 👤 My Purchase
 </button>
 </div>
@@ -111,7 +111,7 @@ return (
                   </button>
                 </li>
               </ul>
-              <button className="btn btn-sm btn-outline-warning w-100" onClick={() => handleInterestClick(crop)}>
+              <button className="btn btn-sm btn-outline-darkgreen w-100" onClick={() => handleInterestClick(crop)}>
                 Express Interest
               </button>
             </div>

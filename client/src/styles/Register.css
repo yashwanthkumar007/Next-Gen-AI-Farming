@@ -1,0 +1,43 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: url('/images/bg-register.jpg') no-repeat center center fixed;
+  background-size: cover;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.1); /* transparent white */
+  backdrop-filter: blur(10px); /* blur effect on form */
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  padding: 25px;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.register-card h3 {
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.scrollable-form {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+/* optional: scrollbar styling */
+.scrollable-form::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollable-form::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 128, 0, 0.5);
+  border-radius: 3px;
+}

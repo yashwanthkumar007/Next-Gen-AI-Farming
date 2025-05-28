@@ -1,0 +1,35 @@
+
+.payment-background {
+  background: url('/images/payment.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  color: #0f5132;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  transition: all 0.3s ease-in-out;
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(31, 38, 135, 0.5);
+}
+
+.glass-card {
+  color: #fffefe; /* changed from #0f5132 (dark green) to black */
+}
+
+.glass-card label,
+.glass-card p,
+.glass-card h4,
+.glass-card h5 {
+  color: #ffffff !important; /* ensure black text for all elements inside */
+}

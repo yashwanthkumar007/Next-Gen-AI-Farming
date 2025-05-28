@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/FarmerTransactions.css';
 
 const FarmerTransactions = () => {
   const navigate = useNavigate();
@@ -45,101 +45,100 @@ const FarmerTransactions = () => {
   const filtered = transactions.filter((tx) => {
     const matchesCrop = tx.cropName?.toLowerCase().includes(cropFilter.toLowerCase());
     const matchesBuyer = tx.buyerId?.name?.toLowerCase().includes(buyerFilter.toLowerCase());
-    const txDate = new Date(tx.createdAt).toISOString().split('T')[0]; // yyyy-mm-dd
+    const txDate = new Date(tx.createdAt).toISOString().split('T')[0];
     const from = fromDate || null;
     const to = toDate || null;
 
-    const inRange =
-      (!from || txDate >= from) &&
-      (!to || txDate <= to);
-
+    const inRange = (!from || txDate >= from) && (!to || txDate <= to);
     return matchesCrop && matchesBuyer && inRange;
   });
 
   const sorted = [...filtered].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   return (
-    <div className="container py-5">
-      <h4 className="mb-4 text-success">📦 My Crop Transactions</h4>
+    <div className="transaction-page">
+      <div className="container py-5 bg-blur rounded-4">
+        <h4 className="mb-4 text-success fw-bold fade-in-down">📦 My Crop Transactions</h4>
 
-      <div className="row mb-4">
-        <div className="col-md-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Filter by Crop"
-            value={cropFilter}
-            onChange={(e) => setCropFilter(e.target.value)}
-          />
+        <div className="row mb-4 fade-in">
+          <div className="col-md-3 mb-2">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Filter by Crop"
+              value={cropFilter}
+              onChange={(e) => setCropFilter(e.target.value)}
+            />
+          </div>
+          <div className="col-md-3 mb-2">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Filter by Buyer"
+              value={buyerFilter}
+              onChange={(e) => setBuyerFilter(e.target.value)}
+            />
+          </div>
+          <div className="col-md-3 mb-2">
+            <input
+              type="date"
+              className="form-control"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+            />
+          </div>
+          <div className="col-md-3 mb-2">
+            <input
+              type="date"
+              className="form-control"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+            />
+          </div>
         </div>
-        <div className="col-md-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Filter by Buyer"
-            value={buyerFilter}
-            onChange={(e) => setBuyerFilter(e.target.value)}
-          />
-        </div>
-        <div className="col-md-3">
-          <input
-            type="date"
-            className="form-control"
-            value={fromDate}
-            onChange={(e) => setFromDate(e.target.value)}
-          />
-        </div>
-        <div className="col-md-3">
-          <input
-            type="date"
-            className="form-control"
-            value={toDate}
-            onChange={(e) => setToDate(e.target.value)}
-          />
-        </div>
-      </div>
 
-      {loading ? (
-        <div className="text-center mt-5">
-          <div className="spinner-border text-success" />
-        </div>
-      ) : sorted.length === 0 ? (
-        <p className="text-muted">No transactions found.</p>
-      ) : (
-        <div className="table-responsive" role="region" aria-label="Transactions Table">
-          <table className="table table-bordered table-striped shadow-sm">
-            <thead className="table-light">
-              <tr>
-                <th>Crop</th>
-                <th>Buyer</th>
-                <th>Quantity</th>
-                <th>Rate (₹)</th>
-                <th>Total (₹)</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sorted.map((tx, index) => (
-                <tr key={index}>
-                  <td>{tx.cropName}</td>
-                  <td>
-                    <button
-                      className="btn btn-link p-0"
-                      onClick={() => navigate(`/buyer/${tx.buyerId?._id}`)}
-                    >
-                      {tx.buyerId?.name || 'Unknown'}
-                    </button>
-                  </td>
-                  <td>{tx.quantity} kg</td>
-                  <td>₹{tx.pricePerKg}</td>
-                  <td>₹{tx.totalAmount.toFixed(2)}</td>
-                  <td>{formatDate(tx.createdAt)}</td>
+        {loading ? (
+          <div className="text-center mt-5 fade-in">
+            <div className="spinner-border text-success" />
+          </div>
+        ) : sorted.length === 0 ? (
+          <p className="text-muted fade-in">No transactions found.</p>
+        ) : (
+          <div className="table-responsive fade-in-up">
+            <table className="table table-bordered table-hover table-striped shadow">
+              <thead className="table-success">
+                <tr>
+                  <th>Crop</th>
+                  <th>Buyer</th>
+                  <th>Quantity</th>
+                  <th>Rate (₹)</th>
+                  <th>Total (₹)</th>
+                  <th>Date</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              </thead>
+              <tbody>
+                {sorted.map((tx, index) => (
+                  <tr key={index}>
+                    <td className="fw-semibold">{tx.cropName}</td>
+                    <td>
+                      <button
+                        className="btn btn-link text-decoration-none text-dark"
+                        onClick={() => navigate(`/buyer/${tx.buyerId?._id}`)}
+                      >
+                        {tx.buyerId?.name || 'Unknown'}
+                      </button>
+                    </td>
+                    <td>{tx.quantity} kg</td>
+                    <td>₹{tx.pricePerKg}</td>
+                    <td>₹{tx.totalAmount.toFixed(2)}</td>
+                    <td>{formatDate(tx.createdAt)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

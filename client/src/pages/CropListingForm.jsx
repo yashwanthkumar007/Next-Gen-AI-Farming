@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'animate.css';
+import '../styles/CropListingForm.css';
 
 const CropListingForm = () => {
-  const user = JSON.parse(localStorage.getItem('user')); // get user from localStorage
+  const user = JSON.parse(localStorage.getItem('user'));
 
   const [formData, setFormData] = useState({
     name: '',
@@ -23,11 +24,10 @@ const CropListingForm = () => {
     e.preventDefault();
     setFormData({ name: '', quantity: '', price: '', location: '' });
 
-
     const cropData = {
       ...formData,
       farmer: user?.name || 'Unknown',
-      farmerId: user?.id || null,   // ✅ Corrected here!
+      farmerId: user?.id || null,
     };
 
     try {
@@ -47,11 +47,9 @@ const CropListingForm = () => {
   };
 
   return (
-    <div className="bg-light min-vh-100 px-3 py-5 animate__animated animate__fadeIn">
-     
-
+    <div className="crop-listing-bg animate__animated animate__fadeIn">
       <div className="container">
-        <div className="card shadow p-4 mx-auto" style={{ maxWidth: 550 }}>
+        <div className="card transparent-card shadow p-4 mx-auto" style={{ maxWidth: 550 }}>
           <h3 className="text-success text-center mb-3">🌾 List a Crop for Sale</h3>
           <p className="text-muted text-center mb-4">
             Please fill in the details below to make your crop available on the market.
@@ -59,7 +57,7 @@ const CropListingForm = () => {
 
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label className="form-label">Crop Name</label>
+              <label className="form-label fw-semibold">Crop Name</label>
               <input
                 type="text"
                 name="name"
@@ -72,7 +70,7 @@ const CropListingForm = () => {
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Quantity (in kg)</label>
+              <label className="form-label fw-semibold">Quantity (in kg)</label>
               <input
                 type="number"
                 name="quantity"
@@ -85,7 +83,7 @@ const CropListingForm = () => {
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Price (per unit)</label>
+              <label className="form-label fw-semibold">Price (per unit)</label>
               <input
                 type="text"
                 name="price"
@@ -98,7 +96,7 @@ const CropListingForm = () => {
             </div>
 
             <div className="mb-4">
-              <label className="form-label">Location</label>
+              <label className="form-label fw-semibold">Location</label>
               <input
                 type="text"
                 name="location"
@@ -110,7 +108,7 @@ const CropListingForm = () => {
               />
             </div>
 
-            <button className="btn btn-success w-100">Submit Crop</button>
+            <button className="btn btn-success w-100 fw-semibold">Submit Crop</button>
           </form>
         </div>
       </div>

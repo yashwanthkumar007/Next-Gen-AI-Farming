@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/AdminUserList.css';
 
 const AdminUserList = () => {
   const [users, setUsers] = useState([]);
@@ -56,78 +57,80 @@ const AdminUserList = () => {
   });
 
   return (
-    <div className="container py-5">
-      <h4 className="mb-4 text-primary">👥 Registered Users</h4>
+    <div className="admin-user-bg py-5">
+      <div className="container glass-effect p-4 rounded shadow-lg animate-fadeIn">
+        <h4 className="mb-4 text-success fw-bold">👥 Registered Users</h4>
 
-      <div className="d-flex justify-content-end gap-3 mb-3">
-        <select className="form-select w-auto" value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)}>
-          <option value="all">All Roles</option>
-          <option value="farmer">Farmer</option>
-          <option value="buyer">Buyer</option>
-        </select>
+        <div className="d-flex justify-content-end gap-3 mb-4">
+          <select className="form-select w-auto border-success" value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)}>
+            <option value="all">All Roles</option>
+            <option value="farmer">Farmer</option>
+            <option value="buyer">Buyer</option>
+          </select>
 
-        <select className="form-select w-auto" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-          <option value="all">All Status</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-        </select>
-      </div>
-
-      {loading ? (
-        <div className="text-center mt-4">
-          <div className="spinner-border text-primary" role="status" />
+          <select className="form-select w-auto border-success" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+            <option value="all">All Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
         </div>
-      ) : filteredUsers.length === 0 ? (
-        <p className="text-muted">No users match your filter criteria.</p>
-      ) : (
-        <div className="table-responsive">
-          <table className="table table-bordered table-hover shadow-sm">
-            <thead className="table-light">
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUsers.map((user, idx) => (
-                <tr key={user._id}>
-                  <td>{idx + 1}</td>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
-                  <td>
-                    <span className={`badge bg-${user.role === 'farmer' ? 'success' : 'info'}`}>
-                      {user.role}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={`badge bg-${user.isActive ? 'success' : 'secondary'}`}>
-                      {user.isActive ? 'Active' : 'Inactive'}
-                    </span>
-                  </td>
-                  <td>
-                    <button
-                      className={`btn btn-sm ${user.isActive ? 'btn-outline-danger' : 'btn-outline-success'} me-2`}
-                      onClick={() => toggleUserStatus(user._id, !user.isActive)}
-                    >
-                      {user.isActive ? 'Deactivate' : 'Activate'}
-                    </button>
-                    <button
-                      className="btn btn-sm btn-outline-dark"
-                      onClick={() => handleRemove(user._id)}
-                    >
-                      Remove
-                    </button>
-                  </td>
+
+        {loading ? (
+          <div className="text-center mt-4">
+            <div className="spinner-border text-success" role="status" />
+          </div>
+        ) : filteredUsers.length === 0 ? (
+          <p className="text-muted">No users match your filter criteria.</p>
+        ) : (
+          <div className="table-responsive">
+            <table className="table table-bordered table-hover shadow-sm align-middle">
+              <thead className="table-success text-dark">
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              </thead>
+              <tbody>
+                {filteredUsers.map((user, idx) => (
+                  <tr key={user._id}>
+                    <td>{idx + 1}</td>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>
+                      <span className={`badge bg-${user.role === 'farmer' ? 'success' : 'info'}`}>
+                        {user.role}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`badge bg-${user.isActive ? 'success' : 'secondary'}`}>
+                        {user.isActive ? 'Active' : 'Inactive'}
+                      </span>
+                    </td>
+                    <td>
+                      <button
+                        className={`btn btn-sm ${user.isActive ? 'btn-outline-danger' : 'btn-outline-success'} me-2`}
+                        onClick={() => toggleUserStatus(user._id, !user.isActive)}
+                      >
+                        {user.isActive ? 'Deactivate' : 'Activate'}
+                      </button>
+                      <button
+                        className="btn btn-sm btn-outline-dark"
+                        onClick={() => handleRemove(user._id)}
+                      >
+                        Remove
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

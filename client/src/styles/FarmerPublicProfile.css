@@ -1,0 +1,36 @@
+.farmer-profile-bg {
+  background: url('/images/profilebg.jpg') no-repeat center center fixed;
+  background-size: cover;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Removed blur here, kept a subtle transparent overlay if needed */
+.farmer-profile-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.3); /* soft transparent overlay */
+  z-index: 0;
+}
+
+.profile-card {
+  position: relative;
+  z-index: 1;
+  max-width: 500px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.2); /* lighter glassmorphism */
+  border-radius: 1rem;
+  backdrop-filter: blur(20px); /* blur is only here */
+  -webkit-backdrop-filter: blur(40px);
+  box-shadow: 0 8px 24px rgba(0, 128, 0, 0.2);
+  padding: 1.5rem;
+  color: #000;
+}
+
+.list-group-item {
+  font-size: 1rem;
+  border: none;
+  color: #333;
+  background: transparent;
+}

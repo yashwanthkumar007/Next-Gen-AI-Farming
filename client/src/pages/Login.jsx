@@ -2,6 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'animate.css';
+import '../styles/Login.css';
+
+const roleBackgrounds = {
+  farmer: "url('/images/farmer-bg.jpg')",
+  buyer: "url('/images/buyer-bg.jpg')",
+  admin: "url('/images/admin-bg.jpg')",
+};
 
 const Login = () => {
   const [role, setRole] = useState('farmer');
@@ -53,16 +60,13 @@ const Login = () => {
 
   return (
     <div
-      className="d-flex align-items-center justify-content-center vh-100"
+      className="login-background d-flex align-items-center justify-content-center vh-100"
       style={{
-        background: 'linear-gradient(135deg, #e9f5ec 0%, #d4f2e3 100%)',
-        fontFamily: 'Segoe UI, sans-serif',
+        backgroundImage: roleBackgrounds[role],
+        transition: 'background-image 0.5s ease-in-out',
       }}
     >
-      <div
-        className="card shadow-lg p-4 border-0 animate__animated animate__fadeInDown"
-        style={{ width: '100%', maxWidth: 430, borderRadius: '16px' }}
-      >
+      <div className="card login-card shadow-lg p-4 border-0 animate__animated animate__fadeInDown">
         <h3 className="text-center text-success mb-4">🌱 Smart Farming Login</h3>
 
         <form onSubmit={handleLogin}>
